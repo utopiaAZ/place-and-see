@@ -1,0 +1,19 @@
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+.vite/
+
+# Local environment and logs
+*.local
+.env
+.env.*
+!.env.example
+*.log
+npm-debug.log*
+
+# Editor and operating-system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

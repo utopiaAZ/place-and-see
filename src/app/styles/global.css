@@ -1,0 +1,58 @@
+:root {
+  font-family: Inter, Pretendard, "Noto Sans KR", system-ui, sans-serif;
+  color: #2c302c;
+  background: #e9dfce;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; min-height: 100vh; }
+button { font: inherit; }
+
+.game-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(255px, 330px) minmax(0, 900px);
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  padding: 28px;
+  background: radial-gradient(circle at 60% 20%, #fffaf0, #e6dac8 72%);
+}
+
+.sidebar { display: grid; gap: 14px; }
+.panel {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(91, 72, 50, 0.13);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 12px 30px rgba(78, 57, 35, 0.08);
+}
+.eyebrow { color: #a66b35; font-weight: 800; font-size: 0.75rem; letter-spacing: 0.12em; }
+.mission-card h1 { margin: 8px 0; font-size: 1.55rem; }
+.mission-card p { line-height: 1.6; margin: 8px 0 0; }
+.mission-card .hint { color: #6c685f; font-size: 0.88rem; border-top: 1px solid #e9e1d4; padding-top: 12px; }
+.stability-heading { display: flex; justify-content: space-between; }
+.progress-track { height: 10px; margin-top: 12px; overflow: hidden; border-radius: 99px; background: #deddd7; }
+.progress-value { height: 100%; border-radius: inherit; background: #e0a447; transition: width 100ms linear; }
+.stability.complete .progress-value { background: #5b9b69; }
+.stability p { margin: 10px 0 0; color: #68675f; font-size: 0.86rem; }
+.controls { display: flex; gap: 9px; }
+.controls button { flex: 1; border: 0; border-radius: 10px; padding: 11px; color: white; background: #3f6856; cursor: pointer; }
+.controls button:disabled { background: #b5b1a8; cursor: not-allowed; }
+.prototype-note { color: #746e64; font-size: 0.76rem; line-height: 1.5; margin: 0 8px; }
+.canvas-panel { min-width: 0; overflow: hidden; border-radius: 22px; background: #f9f1df; box-shadow: 0 24px 60px rgba(67, 48, 27, 0.18); }
+.phaser-host { width: 100%; aspect-ratio: 800 / 520; }
+.phaser-host canvas { display: block; }
+
+@media (max-width: 850px) {
+  .game-shell { grid-template-columns: 1fr; align-items: start; padding: 16px; }
+  .sidebar { grid-template-columns: 1fr 1fr; }
+  .mission-card { grid-column: 1 / -1; }
+}
+
+@media (max-width: 540px) {
+  .sidebar { grid-template-columns: 1fr; }
+  .game-shell { padding: 10px; }
+}
