@@ -27,5 +27,18 @@ export interface StageDefinition extends PuzzleStageDefinition {
       readonly outletPosition: { readonly x: number; readonly y: number };
       readonly outletDisplaySize: { readonly width: number; readonly height: number };
     };
+    readonly stageThree?: {
+      readonly fanPosition: { readonly x: number; readonly y: number };
+      readonly fanDisplaySize: { readonly width: number; readonly height: number };
+      readonly fanBaseCableAnchor: { readonly x: number; readonly y: number };
+      readonly outletPosition: { readonly x: number; readonly y: number };
+      readonly outletDisplaySize: { readonly width: number; readonly height: number };
+      readonly cakeDisplaySize: { readonly width: number; readonly height: number };
+      readonly cakeOrigin: { readonly x: number; readonly y: number };
+      /** Normalized against the cake image; values may sit outside 0..1. */
+      readonly candleAnchor: { readonly x: number; readonly y: number };
+      readonly candleDisplaySize: { readonly width: number; readonly height: number };
+      readonly ignitionPadding: { readonly x: number; readonly y: number };
+    };
   };
 }

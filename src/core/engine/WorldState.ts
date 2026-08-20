@@ -32,6 +32,23 @@ export function createInitialWorldState(stage: PuzzleStageDefinition): WorldStat
       airflowBlocked: false,
       airflowReachesPaper: false,
     } : null,
+    stageThree: stage.stageThree ? {
+      cakeCondition: 'intact',
+      cakeLocation: 'shelf',
+      candleState: 'unlit',
+      candleTransitionRemainingMs: 0,
+      catThreat: 'active',
+      toyRemainingMs: 0,
+      fanPower: 'powered',
+      fanDirection: 'away',
+      fanPhaseElapsedMs: 0,
+      fanSlowdownRemainingMs: 0,
+      bladesSpinning: true,
+      plugConnected: true,
+      airflowProtection: 'none',
+      airflowBlocked: false,
+      airflowReachesCandle: false,
+    } : null,
   };
 }
 
@@ -43,5 +60,6 @@ export function cloneWorldState(state: WorldState): WorldState {
     goal: { ...state.goal },
     spillPosition: state.spillPosition ? { ...state.spillPosition } : null,
     stageTwo: state.stageTwo ? { ...state.stageTwo } : null,
+    stageThree: state.stageThree ? { ...state.stageThree } : null,
   };
 }

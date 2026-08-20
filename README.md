@@ -4,10 +4,10 @@
 올바른 위치에 놓는 데서 끝나지 않고, 주변 사물과 캐릭터의 반응을 살펴 실패 원인을 해결하는 것이
 핵심입니다.
 
-> **현재 상태: Stage 1·2 vertical slices implemented**
+> **현재 상태: Stage 1·2·3 vertical slices implemented**
 >
-> 프로젝트 전체가 완성된 것은 아니며, 두 스테이지의 플레이 흐름과 확장 가능한 구조를 검증한
-> 수직 샘플입니다.
+> 프로젝트 전체가 완성된 것은 아니며, 세 스테이지의 플레이 흐름과 확장 가능한 구조를 검증한
+> 세 Stage의 수직 샘플입니다.
 
 ## 현재 구현 상태
 
@@ -17,11 +17,15 @@
 - 프레임 속도와 독립적인 순수 TypeScript 결정적 Core 시뮬레이션
 - 기본 실패 흐름, 세 가지 해결법, 3초 안정성 성공 판정
 - 실패 후 재시도, 전체 Stage reset과 성공 화면
-- 실제 MP3 효과음 14개, Sound On/Off와 안전한 loop 정리
+- 실제 MP3 효과음 18개, Sound On/Off와 안전한 loop 정리
 - `?audioDebug=1`로 활성화하는 개발용 Audio QA 패널
 - Core·Bridge·Audio 자동 테스트 및 1600×900 브라우저 플레이 검증 완료
 - Stage 2 선풍기·서류 규칙, 플러그/문진/바람막이 해결법과 Stage 전환
 - `?stage=002` 직접 진입과 Stage별 reset
+- Stage 3 고양이+선풍기 복합 위협, 케이크/촛불/라이터와 네 가지 해결 조합
+- Stage 1 → Stage 2 → Stage 3 순차 전환과 Stage 3 `Demo Complete`
+- Stage 3 신규 SVG 6종과 신규 MP3 4종
+- `?stage=002`, `?stage=003`, `?stage=003&audioDebug=1`, `?stage=003&debugZones=1` 개발용 진입
 
 ## Stage 1
 
@@ -60,6 +64,14 @@
 
 상세 규칙은 [Stage 2 퍼즐 규칙](docs/STAGE_002_RULES.md)을 참고하세요. 개발 중에는 `?stage=002`로
 직접 진입할 수 있습니다.
+
+## Stage 3
+
+**미션: 촛불을 켠 케이크를 책상 위에 준비하세요.**
+
+고양이와 선풍기가 동시에 등장합니다. 간식/장난감과 플러그/파일꽂이를 조합해 두 위협을 처리하고,
+책상 위 케이크의 촛불을 켜 3초 동안 유지합니다. 상세 규칙은 [Stage 3 퍼즐 규칙](docs/STAGE_003_RULES.md),
+오디오 상태는 [Stage 3 오디오 문서](docs/audio/STAGE_003_AUDIO.md)를 참고하세요.
 
 ## 조작 방법
 
@@ -135,9 +147,7 @@ npm run validate:assets
 npm run validate:audio
 ```
 
-현재 기준으로 테스트 75개, Stage 1·2 데이터 검증, Stage 2 SVG 원본/런타임 7쌍 검증, Stage 1·2 Audio Manifest와
-런타임 MP3 14개 검증이 통과합니다. 브라우저에서는 단일 1600×900 캔버스, Stage 전환과 reset,
-사운드 수명주기와 콘솔 warning/error 및 에셋 404 부재를 확인했습니다.
+현재 자동 테스트 138개가 통과합니다. Stage 3는 Core/Phaser/Audio 자동 테스트와 SVG·MP3 원본/런타임 hash 검증을 포함합니다. Stage validator는 3개 Stage, asset validator는 Stage 2·3 SVG 원본/런타임 쌍, audio validator는 Stage 1 MP3 11개·Stage 2 MP3 3개·Stage 3 MP3 4개를 검증합니다. Stage 3 신규 MP3 4개의 marker, volume과 게임 내 재생은 프로젝트 소유자의 직접 청취 검수를 통과했습니다. 기존 Stage 1·2 MP3와 marker는 변경하지 않았습니다.
 
 Stage 2의 `fan-loop-01.mp3`, `paper-flutter-01.mp3`, `paper-fall-01.mp3`는 파형 분석 기반 marker로
 연결되었으며, 프로젝트 소유자의 직접 플레이 청취 검수를 통과했습니다. 자세한 값은
@@ -198,5 +208,5 @@ React·Phaser·Core와 테스트 구현 보조, SVG 제작 지시와 검증, 사
 
 1. 사람 플레이테스트로 조작 이해도와 퍼즐 해답의 발견 가능성 검증
 2. hit area와 고양이·물병의 코미디 타이밍 보정
-3. Stage 3 설계와 데이터 기반 콘텐츠 확장
+3. Stage 4는 아직 구현되지 않았으며, 후속 범위에서 별도로 설계
 4. 필요할 경우 Phaser 번들 분할과 초기 로딩 개선

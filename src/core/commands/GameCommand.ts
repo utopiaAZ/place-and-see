@@ -5,6 +5,7 @@ export type GameCommand =
   | { readonly type: 'PICK_UP_OBJECT'; readonly objectId: ObjectId }
   | { readonly type: 'CANCEL_DRAG'; readonly objectId: ObjectId }
   | { readonly type: 'REPORT_INVALID_DROP'; readonly objectId: ObjectId }
+  | { readonly type: 'LIGHT_CANDLE'; readonly lighterId: ObjectId }
   | { readonly type: 'ADVANCE_TIME'; readonly deltaMs: number }
   | { readonly type: 'RESET_STAGE' };
 

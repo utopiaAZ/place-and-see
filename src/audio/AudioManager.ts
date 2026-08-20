@@ -12,7 +12,13 @@ export interface AudioPlaybackPort {
   stopAll(): void;
   setMuted(muted: boolean): void;
   getActiveKeys(): readonly string[];
+  getAssetStatus?(url: string): AudioAssetDebugStatus;
   destroy(): void;
+}
+
+export interface AudioAssetDebugStatus {
+  readonly load: 'idle' | 'loading' | 'loaded' | 'error';
+  readonly decode: 'idle' | 'pending' | 'decoded' | 'error';
 }
 
 export interface AudioDebugState {
@@ -21,6 +27,7 @@ export interface AudioDebugState {
   readonly activeKeys: readonly string[];
   readonly recentKeys: readonly string[];
   readonly assets: readonly AudioAssetDefinition[];
+  readonly assetStatuses: Readonly<Record<string, AudioAssetDebugStatus>>;
 }
 
 export class AudioManager {
@@ -56,6 +63,7 @@ export class AudioManager {
 
   public handleGameEvent(event: GameEvent): void {
     if (event.type === 'CAT_RETURNING') this.stopByEvent('CAT_PLAYING');
+    if (event.type === 'CAT_DISTRACTION_ENDED') this.stopByEvent('CAT_PLAYING');
     if (event.type === 'PAPER_FLUTTER_STOPPED' || event.type === 'PAPER_BLOWN_AWAY') this.stopByEvent('PAPER_FLUTTER_STARTED');
     if (event.type === 'FAN_STOPPED') this.stopByEvent('FAN_STARTED');
     if (event.type === 'STAGE_COMPLETED') this.stopBehaviorLoops();
@@ -64,7 +72,7 @@ export class AudioManager {
       this.playedOnce.clear();
       this.lastPlayedAt.clear();
       this.recentKeys.length = 0;
-      if (event.state.stageTwo?.fanPower === 'powered') this.play('FAN_STARTED');
+      if (event.state.stageTwo?.fanPower === 'powered' || event.state.stageThree?.fanPower === 'powered') this.play('FAN_STARTED');
     }
     const soundEvent = soundEventForGameEvent(event);
     if (soundEvent) this.play(soundEvent);
@@ -77,6 +85,7 @@ export class AudioManager {
 
   public syncWorldState(state: WorldState): void {
     if (state.stageTwo?.fanPower === 'powered') this.play('FAN_STARTED');
+    if (state.stageThree?.fanPower === 'powered') this.play('FAN_STARTED');
     if (state.stageTwo?.paperState === 'fluttering') this.play('PAPER_FLUTTER_STARTED');
   }
 
@@ -111,12 +120,14 @@ export class AudioManager {
   }
 
   public getDebugState(): AudioDebugState {
+    const assets = this.manifest?.sounds ?? [];
     return {
       unlocked: this.unlocked,
       muted: this.settings.muted,
       activeKeys: this.playback?.getActiveKeys() ?? [],
       recentKeys: [...this.recentKeys],
-      assets: this.manifest?.sounds ?? [],
+      assets,
+      assetStatuses: Object.fromEntries(assets.map((asset) => [asset.key, this.playback?.getAssetStatus?.(asset.url) ?? { load: 'idle', decode: 'idle' }])),
     };
   }
 

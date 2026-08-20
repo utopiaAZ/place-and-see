@@ -1,5 +1,5 @@
 import type { AudioAssetDefinition } from './AudioManifest';
-import type { AudioPlaybackPort } from './AudioManager';
+import type { AudioAssetDebugStatus, AudioPlaybackPort } from './AudioManager';
 
 type AudioContextConstructor = new () => AudioContext;
 
@@ -11,6 +11,7 @@ export class WebAudioPlaybackBackend implements AudioPlaybackPort {
   private readonly buffers = new Map<string, Promise<AudioBuffer | undefined>>();
   private readonly active = new Map<string, Set<AudioBufferSourceNode>>();
   private readonly generations = new Map<string, number>();
+  private readonly statuses = new Map<string, AudioAssetDebugStatus>();
 
   public async unlock(): Promise<boolean> {
     if (this.destroyed) return false;
@@ -65,6 +66,10 @@ export class WebAudioPlaybackBackend implements AudioPlaybackPort {
     return [...this.active.entries()].filter(([, sources]) => sources.size > 0).map(([key]) => key).sort();
   }
 
+  public getAssetStatus(url: string): AudioAssetDebugStatus {
+    return this.statuses.get(url) ?? { load: 'idle', decode: 'idle' };
+  }
+
   public destroy(): void {
     if (this.destroyed) return;
     this.destroyed = true;
@@ -73,6 +78,7 @@ export class WebAudioPlaybackBackend implements AudioPlaybackPort {
     this.context = undefined;
     this.masterGain = undefined;
     this.buffers.clear();
+    this.statuses.clear();
   }
 
   private async startWhenLoaded(asset: AudioAssetDefinition, volume: number, generation: number): Promise<void> {
@@ -114,15 +120,31 @@ export class WebAudioPlaybackBackend implements AudioPlaybackPort {
     if (cached) return cached;
     const loading = (async () => {
       if (!this.context) return undefined;
+      this.statuses.set(url, { load: 'loading', decode: 'idle' });
       try {
         const response = await fetch(url);
         if (!response.ok) {
-          if (import.meta.env.DEV) console.error(`[Place & See] Failed to load audio: ${url} (${response.status})`);
+          this.statuses.set(url, { load: 'error', decode: 'idle' });
           return undefined;
         }
-        return await this.context.decodeAudioData(await response.arrayBuffer());
-      } catch (error) {
-        if (import.meta.env.DEV) console.error(`[Place & See] Failed to decode audio: ${url}`, error);
+        const contentType = response.headers.get('content-type') ?? '';
+        if (contentType && !contentType.startsWith('audio/') && !contentType.includes('octet-stream')) {
+          this.statuses.set(url, { load: 'error', decode: 'idle' });
+          return undefined;
+        }
+        const encoded = await response.arrayBuffer();
+        this.statuses.set(url, { load: 'loaded', decode: 'pending' });
+        try {
+          const decoded = await this.context.decodeAudioData(encoded);
+          this.statuses.set(url, { load: 'loaded', decode: 'decoded' });
+          return decoded;
+        } catch {
+          this.statuses.set(url, { load: 'loaded', decode: 'error' });
+          return undefined;
+        }
+      } catch {
+        // Audio is optional; missing or undecodable files must not interrupt gameplay.
+        this.statuses.set(url, { load: 'error', decode: 'idle' });
         return undefined;
       }
     })();

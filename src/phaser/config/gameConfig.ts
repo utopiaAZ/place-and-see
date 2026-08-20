@@ -4,6 +4,7 @@ import { BootScene } from '../scenes/BootScene';
 import { PreloadScene } from '../scenes/PreloadScene';
 import { RoomScene } from '../scenes/RoomScene';
 import { StageTwoScene } from '../scenes/StageTwoScene';
+import { StageThreeScene } from '../scenes/StageThreeScene';
 
 export function createGameConfig(parent: HTMLElement, bridge: GameBridge): Phaser.Types.Core.GameConfig {
   return {
@@ -12,7 +13,7 @@ export function createGameConfig(parent: HTMLElement, bridge: GameBridge): Phase
     width: 1600,
     height: 900,
     backgroundColor: '#f7f1e3',
-    scene: [BootScene, PreloadScene, RoomScene, StageTwoScene],
+    scene: [BootScene, PreloadScene, RoomScene, StageTwoScene, StageThreeScene],
     scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
     render: { antialias: true, pixelArt: false },
     callbacks: {

@@ -37,6 +37,17 @@ export type GameEvent =
   | { readonly type: 'PAPER_WEIGHT_REMOVED' }
   | { readonly type: 'AIRFLOW_BLOCKED' }
   | { readonly type: 'AIRFLOW_UNBLOCKED' }
+  | { readonly type: 'CAKE_PLACED' }
+  | { readonly type: 'CAKE_PICKED_UP' }
+  | { readonly type: 'CAT_NOTICED_CAKE' }
+  | { readonly type: 'CAT_HIT_CAKE' }
+  | { readonly type: 'CAKE_DAMAGED' }
+  | { readonly type: 'CANDLE_LIGHTING_STARTED' }
+  | { readonly type: 'CANDLE_LIT' }
+  | { readonly type: 'CANDLE_FLICKER_STARTED' }
+  | { readonly type: 'CANDLE_FLICKER_STOPPED' }
+  | { readonly type: 'CANDLE_BLOWN_OUT'; readonly reason: 'airflow' | 'movement' }
+  | { readonly type: 'CAT_DISTRACTION_ENDED' }
   | { readonly type: 'STAGE_RESET'; readonly state: WorldState }
   | { readonly type: 'OBJECT_DROP_REJECTED'; readonly objectId: ObjectId; readonly reason: string }
   | { readonly type: 'COMMAND_REJECTED'; readonly reason: string };

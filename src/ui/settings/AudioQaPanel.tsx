@@ -9,7 +9,7 @@ interface AudioQaPanelProps {
 export function AudioQaPanel({ bridge }: AudioQaPanelProps) {
   const [state, setState] = useState<AudioDebugState>(() => bridge.getAudioDebugState());
   const [expanded, setExpanded] = useState(true);
-  const stageTwo = bridge.getStage().id === 'stage-002';
+  const stageNumber = bridge.getStage().id.slice(-1);
 
   useEffect(() => {
     const timer = window.setInterval(() => setState(bridge.getAudioDebugState()), 250);
@@ -29,7 +29,7 @@ export function AudioQaPanel({ bridge }: AudioQaPanelProps) {
   };
 
   return (
-    <aside className={`audio-qa${expanded ? '' : ' collapsed'}`} aria-label={`${stageTwo ? 'Stage 2' : 'Stage 1'} Audio QA`}>
+    <aside className={`audio-qa${expanded ? '' : ' collapsed'}`} aria-label={`Stage ${stageNumber} Audio QA`}>
       <header>
         <strong>Audio QA</strong>
         <span>{state.unlocked ? 'unlocked' : 'locked'} · {state.muted ? 'muted' : 'audible'}</span>
@@ -47,7 +47,11 @@ export function AudioQaPanel({ bridge }: AudioQaPanelProps) {
             <div><strong>{asset.key}</strong> <small>{asset.sourceFile}</small></div>
             <small>
               total {asset.fullDurationMs}ms · marker {asset.startMs ?? 0}+{asset.durationMs ?? asset.fullDurationMs}ms ·
-              vol {asset.volume.toFixed(2)} · {asset.loop ? 'loop' : 'one-shot'}
+              vol {asset.volume.toFixed(2)} · {asset.category} · {asset.loop ? 'loop' : 'one-shot'}
+            </small>
+            <small>
+              load {state.assetStatuses[asset.key]?.load ?? 'idle'} · decode {state.assetStatuses[asset.key]?.decode ?? 'idle'} ·
+              {state.activeKeys.includes(asset.key) ? ' playing' : ' stopped'}
             </small>
             <div className="audio-qa-actions">
               <button type="button" onClick={() => play(asset.key)}>Play</button>

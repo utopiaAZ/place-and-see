@@ -1,5 +1,4 @@
 import Phaser from 'phaser';
-import type { StageTwoWorldState } from '../../core/types/WorldTypes';
 import type { FanDirection, FanPowerState } from '../../core/types/identifiers';
 import { advanceBladeAngle, FAN_MOTION, getBladeSpeed, getFanHeadPose } from '../animation/fanMotion';
 
@@ -34,7 +33,7 @@ export class FanView extends Phaser.GameObjects.Container {
     this.add([this.bodyImage, this.headPivot]);
   }
 
-  public applyState(state: StageTwoWorldState): void {
+  public applyState(state: FanVisualState): void {
     this.bladeSpeed = getBladeSpeed(
       state.fanPower,
       state.fanSlowdownRemainingMs,
@@ -67,7 +66,7 @@ export class FanView extends Phaser.GameObjects.Container {
     this.blades.setAngle(this.bladeAngle);
   }
 
-  public resetTo(state: StageTwoWorldState): void {
+  public resetTo(state: FanVisualState): void {
     this.scene.tweens.killTweensOf(this.headPivot);
     const pose = getFanHeadPose(state.fanDirection);
     this.headPivot.setPosition(pose.x, -this.bodyImage.displayHeight * 0.233).setAngle(pose.angle).setScale(pose.scaleX, 1);
@@ -82,4 +81,10 @@ export class FanView extends Phaser.GameObjects.Container {
     this.scene.tweens.killTweensOf(this.headPivot);
     this.bladeSpeed = 0;
   }
+}
+
+export interface FanVisualState {
+  readonly fanPower: FanPowerState;
+  readonly fanDirection: FanDirection;
+  readonly fanSlowdownRemainingMs: number;
 }

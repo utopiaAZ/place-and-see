@@ -30,6 +30,29 @@ export interface PuzzleStageDefinition {
   readonly goal: GoalDefinition;
   readonly timings: StageTimings;
   readonly stageTwo?: StageTwoDefinition;
+  readonly stageThree?: StageThreeDefinition;
+}
+
+export interface StageThreeDefinition {
+  readonly fanPhaseDurationMs: number;
+  readonly fanSlowdownMs: number;
+  readonly candleIgnitionMs: number;
+  readonly candleLitHoldMs: number;
+  readonly candleBlowoutMs: number;
+  readonly cakeObjectId: ObjectId;
+  readonly lighterObjectId: ObjectId;
+  readonly foodObjectId: ObjectId;
+  readonly toyObjectId: ObjectId;
+  readonly blockerObjectId: ObjectId;
+  readonly plugObjectId: ObjectId;
+  readonly cakeDeskZoneId: ZoneId;
+  readonly ignitionZoneId: ZoneId;
+  readonly foodZoneId: ZoneId;
+  readonly toyZoneId: ZoneId;
+  readonly blockerZoneId: ZoneId;
+  readonly unpluggedZoneId: ZoneId;
+  readonly lighterHomePosition: Position;
+  readonly damagedCakePosition: Position;
 }
 
 export interface StageTwoDefinition {

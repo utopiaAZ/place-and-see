@@ -13,6 +13,11 @@ import type {
   FanDirection,
   PaperState,
   PaperProtection,
+  CakeCondition,
+  CakeLocation,
+  CandleState,
+  CatThreatState,
+  AirflowProtection,
 } from './identifiers';
 
 export interface ObjectState {
@@ -60,6 +65,25 @@ export interface WorldState {
   readonly spillVisible: boolean;
   readonly spillPosition: Position | null;
   readonly stageTwo: StageTwoWorldState | null;
+  readonly stageThree: StageThreeWorldState | null;
+}
+
+export interface StageThreeWorldState {
+  readonly cakeCondition: CakeCondition;
+  readonly cakeLocation: CakeLocation;
+  readonly candleState: CandleState;
+  readonly candleTransitionRemainingMs: number;
+  readonly catThreat: CatThreatState;
+  readonly toyRemainingMs: number;
+  readonly fanPower: FanPowerState;
+  readonly fanDirection: FanDirection;
+  readonly fanPhaseElapsedMs: number;
+  readonly fanSlowdownRemainingMs: number;
+  readonly bladesSpinning: boolean;
+  readonly plugConnected: boolean;
+  readonly airflowProtection: AirflowProtection;
+  readonly airflowBlocked: boolean;
+  readonly airflowReachesCandle: boolean;
 }
 
 export interface StageTwoWorldState {

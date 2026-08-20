@@ -1,7 +1,7 @@
 # 퍼즐 규칙
 
-Stage 1의 상세 규칙은 아래에, Stage 2의 선풍기·서류 규칙은 [Stage 2 규칙](STAGE_002_RULES.md)에
-분리해 기록합니다. 두 Stage는 각각 `StageOneRuleSystem`, `StageTwoRuleSystem`을 사용합니다.
+Stage 1의 상세 규칙은 아래에, Stage 2와 Stage 3 복합 규칙은 각각 [Stage 2 규칙](STAGE_002_RULES.md),
+[Stage 3 규칙](STAGE_003_RULES.md)에 분리해 기록합니다. 각 Stage는 독립 RuleSystem을 사용합니다.
 
 ## Stage 1
 

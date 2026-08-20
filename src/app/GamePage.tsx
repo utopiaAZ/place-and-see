@@ -5,7 +5,7 @@ import { DEFAULT_AUDIO_SETTINGS } from '../audio/soundCategories';
 import { WebAudioPlaybackBackend } from '../audio/WebAudioPlaybackBackend';
 import { GameBridge } from '../bridge/GameBridge';
 import type { StageDefinition } from '../content/schema/StageDefinition';
-import { stage001, stage002 } from '../content/stages';
+import { stage001, stage002, stage003 } from '../content/stages';
 import { PhaserGame } from '../phaser/PhaserGame';
 import { useGameState } from '../store/useGameState';
 import { GameControls } from '../ui/controls/GameControls';
@@ -22,10 +22,11 @@ function readStoredMute(): boolean {
 }
 
 export function GamePage() {
-  const initialStage = new URLSearchParams(window.location.search).get('stage') === '002' ? 'stage-002' : 'stage-001';
-  const [stageId, setStageId] = useState<'stage-001' | 'stage-002'>(initialStage);
+  const requested = new URLSearchParams(window.location.search).get('stage');
+  const initialStage = requested === '003' ? 'stage-003' : requested === '002' ? 'stage-002' : 'stage-001';
+  const [stageId, setStageId] = useState<'stage-001' | 'stage-002' | 'stage-003'>(initialStage);
   const [muted, setMuted] = useState(readStoredMute);
-  const stage = stageId === 'stage-002' ? stage002 : stage001;
+  const stage = stageId === 'stage-003' ? stage003 : stageId === 'stage-002' ? stage002 : stage001;
   return <StageSession key={stageId} stage={stage} muted={muted} onMutedChange={setMuted} onSwitchStage={setStageId} />;
 }
 
@@ -33,7 +34,7 @@ function StageSession({ stage, muted, onMutedChange, onSwitchStage }: {
   readonly stage: StageDefinition;
   readonly muted: boolean;
   readonly onMutedChange: (muted: boolean) => void;
-  readonly onSwitchStage: (stage: 'stage-001' | 'stage-002') => void;
+  readonly onSwitchStage: (stage: 'stage-001' | 'stage-002' | 'stage-003') => void;
 }) {
   const [bridge] = useState(() => {
     const settings = { ...DEFAULT_AUDIO_SETTINGS, muted };
@@ -82,6 +83,7 @@ function StageSession({ stage, muted, onMutedChange, onSwitchStage }: {
   const goalVisible = goalObject?.zoneId === stage.goal.zoneId || gameState.stageTwo?.paperState === 'fluttering';
   const qa = import.meta.env.DEV && new URLSearchParams(window.location.search).get('audioDebug') === '1';
   const isStageTwo = stage.id === 'stage-002';
+  const isStageThree = stage.id === 'stage-003';
 
   return (
     <main className="game-shell">
@@ -91,16 +93,17 @@ function StageSession({ stage, muted, onMutedChange, onSwitchStage }: {
           <div className="mission-slot"><MissionCard stage={stage} /></div>
           <StatusMessage status={gameState.status} stageId={stage.id} />
           <div className="controls-slot"><GameControls onReset={() => bridge.reset()} muted={muted} onToggleMuted={toggleMuted} /></div>
-          <div className="stability-slot"><StabilityStatus goal={gameState.goal} visible={goalVisible} subject={isStageTwo ? '서류' : '물병'} /></div>
+          <div className="stability-slot"><StabilityStatus goal={gameState.goal} visible={goalVisible} subject={isStageThree ? '케이크' : isStageTwo ? '서류' : '물병'} /></div>
           {gameState.progressState === 'completed' && (
             <SuccessPanel
               onReplay={() => bridge.reset()}
-              title={isStageTwo ? 'Demo Complete' : '미션 완료!'}
-              message={isStageTwo ? '서류가 안전하게 놓였습니다!' : '물병이 안전하게 유지되고 있어요.'}
-              replayLabel={isStageTwo ? 'Restart Stage' : '다시 플레이'}
-              secondaryAction={isStageTwo
-                ? { label: 'Back to Stage 1', onClick: () => onSwitchStage('stage-001') }
-                : { label: 'Next Stage', onClick: () => onSwitchStage('stage-002') }}
+              title={isStageThree ? 'Demo Complete' : isStageTwo ? '미션 완료!' : '미션 완료!'}
+              message={isStageThree ? '생일 케이크 준비가 끝났습니다!' : isStageTwo ? '서류가 안전하게 놓였습니다!' : '물병이 안전하게 유지되고 있어요.'}
+              replayLabel={isStageThree || isStageTwo ? 'Restart Stage' : '다시 플레이'}
+              secondaryAction={isStageThree
+                ? { label: 'Back to Stage 2', onClick: () => onSwitchStage('stage-002') }
+                : isStageTwo ? { label: 'Next Stage', onClick: () => onSwitchStage('stage-003') }
+                  : { label: 'Next Stage', onClick: () => onSwitchStage('stage-002') }}
             />
           )}
           {qa && <AudioQaPanel bridge={bridge} />}

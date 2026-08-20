@@ -23,7 +23,12 @@ export type SoundEvent =
   | 'FAN_STOPPED'
   | 'PAPER_FLUTTER_STARTED'
   | 'PAPER_FLUTTER_STOPPED'
-  | 'PAPER_BLOWN_AWAY';
+  | 'PAPER_BLOWN_AWAY'
+  | 'CAKE_PLACED'
+  | 'CAT_HIT_CAKE'
+  | 'CANDLE_LIGHTING_STARTED'
+  | 'CANDLE_BLOWN_OUT'
+  | 'CAT_NOTICED_CAKE';
 
 export function soundEventForGameEvent(event: GameEvent): SoundEvent | undefined {
   switch (event.type) {
@@ -50,6 +55,11 @@ export function soundEventForGameEvent(event: GameEvent): SoundEvent | undefined
     case 'PAPER_FLUTTER_STARTED': return 'PAPER_FLUTTER_STARTED';
     case 'PAPER_FLUTTER_STOPPED': return 'PAPER_FLUTTER_STOPPED';
     case 'PAPER_BLOWN_AWAY': return 'PAPER_BLOWN_AWAY';
+    case 'CAKE_PLACED': return 'CAKE_PLACED';
+    case 'CAT_HIT_CAKE': return 'CAT_HIT_CAKE';
+    case 'CANDLE_LIGHTING_STARTED': return 'CANDLE_LIGHTING_STARTED';
+    case 'CANDLE_BLOWN_OUT': return event.reason === 'airflow' ? 'CANDLE_BLOWN_OUT' : undefined;
+    case 'CAT_NOTICED_CAKE': return 'CAT_NOTICED_CAKE';
     default: return undefined;
   }
 }
