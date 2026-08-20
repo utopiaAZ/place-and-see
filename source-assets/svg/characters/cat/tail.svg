@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 320 320" role="img" aria-labelledby="title desc">
+  <title id="title">Cat tail</title>
+  <desc id="desc">A long expressive orange tail curling upward at the left with a cream tip.</desc>
+  <g id="tail" stroke="#17213A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <path id="tail-base" d="M111 206 Q70 216 47 190 Q24 163 38 127 Q49 99 73 104 Q91 109 82 129 Q72 151 85 165 Q100 180 125 166 Z" fill="#F6A23C"/>
+    <path id="tail-tip" d="M38 127 Q47 101 68 103 Q82 105 84 117 Q72 112 65 126 Q59 139 62 150 Q43 147 38 127 Z" fill="#FFF4D6"/>
+  </g>
+</svg>

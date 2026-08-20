@@ -1,27 +1,39 @@
 import type {
   ActorId,
-  LocationId,
-  ObjectCondition,
+  BottleOrientation,
+  CatBehaviorState,
   ObjectId,
+  ObjectKind,
   Position,
   StageId,
+  StageProgressState,
+  StageStatus,
+  ZoneId,
 } from './identifiers';
 
 export interface ObjectState {
   readonly id: ObjectId;
-  readonly kind: string;
+  readonly kind: ObjectKind;
   readonly position: Position;
-  readonly location: LocationId;
-  readonly condition: ObjectCondition;
+  readonly zoneId: ZoneId;
+  readonly orientation: BottleOrientation | null;
+  readonly isSupportedByMat: boolean;
+  readonly effectRemainingMs: number;
   readonly graphicKey: string;
   readonly draggable: boolean;
+  readonly inputLocked: boolean;
+  readonly isBeingDragged: boolean;
 }
 
 export interface ActorState {
   readonly id: ActorId;
-  readonly kind: string;
+  readonly kind: 'cat';
   readonly position: Position;
-  readonly attention: 'idle' | 'interested';
+  readonly homePosition: Position;
+  readonly behavior: CatBehaviorState;
+  readonly behaviorElapsedMs: number;
+  readonly attentionTargetId: ObjectId | null;
+  readonly pendingDistraction: 'cat-food' | 'toy-mouse' | null;
   readonly graphicKey: string;
 }
 
@@ -30,6 +42,7 @@ export interface GoalProgress {
   readonly stableForMs: number;
   readonly requiredMs: number;
   readonly completed: boolean;
+  readonly progress: number;
 }
 
 export interface WorldState {
@@ -38,4 +51,8 @@ export interface WorldState {
   readonly objects: Readonly<Record<ObjectId, ObjectState>>;
   readonly actors: Readonly<Record<ActorId, ActorState>>;
   readonly goal: GoalProgress;
+  readonly progressState: StageProgressState;
+  readonly status: StageStatus;
+  readonly spillVisible: boolean;
+  readonly spillPosition: Position | null;
 }

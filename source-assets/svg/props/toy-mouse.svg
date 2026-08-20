@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Toy mouse</title>
+  <desc id="desc">A turquoise wind-up toy mouse with a round body, coral ear, and long playful tail.</desc>
+  <g id="toy-mouse" stroke="#17213A" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+    <path id="tail" d="M65 151 Q24 140 30 105 Q35 79 60 83" fill="none"/>
+    <path id="mouse-body" d="M53 149 Q62 104 113 99 Q160 94 198 132 Q220 154 198 179 Q176 201 119 198 Q69 196 53 166 Z" fill="#59D8D0"/>
+    <path id="mouse-head" d="M168 126 Q204 115 224 144 Q235 161 219 177 Q202 193 176 179 Z" fill="#59D8D0"/>
+    <ellipse id="ear" cx="179" cy="123" rx="20" ry="22" fill="#FF6B6B"/>
+    <circle id="eye" cx="207" cy="148" r="6" fill="#17213A" stroke="none"/>
+    <path id="nose" d="M226 162 L239 167 L225 174 Z" fill="#FF6B6B"/>
+    <g id="wind-up-key" fill="#FFF4D6">
+      <path id="key-stem" d="M113 100 V76" fill="none"/>
+      <path id="key-bow" d="M93 68 Q93 57 104 57 H122 Q133 57 133 68 Q133 79 122 79 H104 Q93 79 93 68 Z"/>
+    </g>
+  </g>
+</svg>

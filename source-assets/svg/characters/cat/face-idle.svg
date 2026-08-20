@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 320 320" role="img" aria-labelledby="title desc">
+  <title id="title">Cat idle face</title>
+  <desc id="desc">A calm unimpressed expression aligned to the shared cat head canvas.</desc>
+  <g id="face-idle" fill="none" stroke="#17213A" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path id="left-eye" d="M205 123 Q215 119 223 123"/>
+    <path id="right-eye" d="M250 122 Q259 119 267 124"/>
+    <path id="nose" d="M239 146 L247 146 L243 152 Z" fill="#17213A"/>
+    <path id="mouth" d="M243 153 Q240 161 233 160 M243 153 Q248 160 254 158"/>
+    <path id="whiskers-left" d="M226 153 L205 148 M226 160 L204 164"/>
+    <path id="whiskers-right" d="M259 151 L280 145 M259 159 L281 161"/>
+  </g>
+</svg>

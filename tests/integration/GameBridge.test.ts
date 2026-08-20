@@ -7,7 +7,7 @@ describe('GameBridge', () => {
     const bridge = new GameBridge(stage001);
     const listener = vi.fn();
     const unsubscribe = bridge.subscribeToState(listener);
-    bridge.dispatch({ type: 'MOVE_OBJECT', objectId: 'bottle', position: { x: 500, y: 200 }, location: 'desk' });
+    bridge.dispatch({ type: 'DROP_OBJECT', objectId: 'bottle', worldPosition: { x: 1200, y: 350 }, zoneId: 'desk-surface' });
     expect(listener).toHaveBeenCalled();
     unsubscribe();
     listener.mockClear();

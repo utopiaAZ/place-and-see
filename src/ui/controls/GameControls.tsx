@@ -1,8 +1,22 @@
-export function GameControls({ onReset }: { readonly onReset: () => void }) {
+interface GameControlsProps {
+  readonly onReset: () => void;
+  readonly muted: boolean;
+  readonly onToggleMuted: () => void;
+}
+
+export function GameControls({ onReset, muted, onToggleMuted }: GameControlsProps) {
   return (
     <section className="panel controls">
       <button type="button" onClick={onReset}>처음부터 다시</button>
-      <button type="button" disabled title="명령 기록 기반 되돌리기는 다음 단계에서 구현합니다.">되돌리기</button>
+      <button
+        type="button"
+        className="audio-button"
+        onClick={onToggleMuted}
+        aria-pressed={!muted}
+        aria-label={muted ? '사운드 켜기' : '사운드 끄기'}
+      >
+        {muted ? '🔇 Sound Off' : '🔊 Sound On'}
+      </button>
     </section>
   );
 }

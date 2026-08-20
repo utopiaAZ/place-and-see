@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Cat food bowl</title>
+  <desc id="desc">A coral cat bowl filled with large yellow and cream treat pieces.</desc>
+  <g id="cat-food" stroke="#17213A" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+    <g id="treats">
+      <path id="treat-left" d="M69 103 Q65 81 84 75 Q103 70 111 93 L115 119 Z" fill="#FFCA5C"/>
+      <path id="treat-middle" d="M108 93 Q110 67 132 67 Q153 69 151 95 L148 120 Z" fill="#FFF4D6"/>
+      <path id="treat-right" d="M147 97 Q156 76 175 84 Q192 92 181 114 L176 124 Z" fill="#FFCA5C"/>
+    </g>
+    <g id="bowl">
+      <path id="bowl-rim" d="M48 112 Q48 101 61 101 H195 Q208 101 208 112 Q208 127 192 130 H64 Q48 127 48 112 Z" fill="#FFF4D6"/>
+      <path id="bowl-body" d="M61 128 H195 L184 190 Q181 207 163 207 H93 Q75 207 72 190 Z" fill="#FF6B6B"/>
+      <path id="bowl-foot" d="M82 207 H174" fill="none"/>
+    </g>
+  </g>
+</svg>

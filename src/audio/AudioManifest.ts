@@ -1,19 +1,24 @@
-import type { SoundCategory } from './soundCategories';
 import type { SoundEvent } from './SoundEventMap';
 
-export interface AudioVariant {
-  readonly key: string;
-  readonly sources: readonly string[];
-  readonly weight?: number;
-}
+export type AudioAssetCategory = 'sfx' | 'ui' | 'loop';
 
-export interface AudioManifestEntry {
+export interface AudioAssetDefinition {
+  readonly key: string;
   readonly event: SoundEvent;
-  readonly category: SoundCategory;
-  readonly variants: readonly AudioVariant[];
+  readonly sourceFile: string;
+  readonly url: string;
+  readonly category: AudioAssetCategory;
+  readonly fullDurationMs: number;
+  readonly volume: number;
+  readonly loop?: boolean;
+  readonly startMs?: number;
+  readonly durationMs?: number;
+  readonly cooldownMs?: number;
+  readonly maxInstances?: number;
+  readonly oncePerStage?: boolean;
 }
 
 export interface AudioManifest {
   readonly version: 1;
-  readonly sounds: readonly AudioManifestEntry[];
+  readonly sounds: readonly AudioAssetDefinition[];
 }

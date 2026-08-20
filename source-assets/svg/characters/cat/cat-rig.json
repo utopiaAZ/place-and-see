@@ -1,0 +1,114 @@
+{
+  "canvas": {
+    "width": 320,
+    "height": 320,
+    "baselineY": 286,
+    "centerX": 160
+  },
+  "defaultFacing": "right",
+  "displaySize": {
+    "width": 180,
+    "height": 180
+  },
+  "layers": [
+    {
+      "key": "back-leg",
+      "file": "back-leg.svg",
+      "depth": 0,
+      "x": 0,
+      "y": 0,
+      "originX": 0.5,
+      "originY": 0.5,
+      "rotationPivot": { "x": 145, "y": 222 },
+      "defaultAngle": 0,
+      "recommendedAngleRange": { "min": -24, "max": 18 }
+    },
+    {
+      "key": "tail",
+      "file": "tail.svg",
+      "depth": 1,
+      "x": 0,
+      "y": 0,
+      "originX": 0.5,
+      "originY": 0.5,
+      "rotationPivot": { "x": 111, "y": 190 },
+      "defaultAngle": 0,
+      "recommendedAngleRange": { "min": -32, "max": 38 }
+    },
+    {
+      "key": "body",
+      "file": "body.svg",
+      "depth": 2,
+      "x": 0,
+      "y": 0,
+      "originX": 0.5,
+      "originY": 0.5,
+      "rotationPivot": { "x": 162, "y": 204 },
+      "defaultAngle": 0,
+      "recommendedAngleRange": { "min": -8, "max": 8 }
+    },
+    {
+      "key": "front-leg",
+      "file": "front-leg.svg",
+      "depth": 3,
+      "x": 0,
+      "y": 0,
+      "originX": 0.5,
+      "originY": 0.5,
+      "rotationPivot": { "x": 230, "y": 207 },
+      "defaultAngle": 0,
+      "recommendedAngleRange": { "min": -34, "max": 28 }
+    },
+    {
+      "key": "head",
+      "file": "head.svg",
+      "depth": 4,
+      "x": 0,
+      "y": 0,
+      "originX": 0.5,
+      "originY": 0.5,
+      "rotationPivot": { "x": 202, "y": 164 },
+      "defaultAngle": 0,
+      "recommendedAngleRange": { "min": -16, "max": 20 }
+    },
+    {
+      "key": "face-idle",
+      "file": "face-idle.svg",
+      "depth": 5,
+      "x": 0,
+      "y": 0,
+      "originX": 0.5,
+      "originY": 0.5,
+      "rotationPivot": { "x": 238, "y": 144 },
+      "defaultAngle": 0,
+      "recommendedAngleRange": { "min": 0, "max": 0 },
+      "defaultVisible": true
+    },
+    {
+      "key": "face-curious",
+      "file": "face-curious.svg",
+      "depth": 5,
+      "x": 0,
+      "y": 0,
+      "originX": 0.5,
+      "originY": 0.5,
+      "rotationPivot": { "x": 238, "y": 144 },
+      "defaultAngle": 0,
+      "recommendedAngleRange": { "min": 0, "max": 0 },
+      "defaultVisible": false
+    },
+    {
+      "key": "face-happy",
+      "file": "face-happy.svg",
+      "depth": 5,
+      "x": 0,
+      "y": 0,
+      "originX": 0.5,
+      "originY": 0.5,
+      "rotationPivot": { "x": 238, "y": 144 },
+      "defaultAngle": 0,
+      "recommendedAngleRange": { "min": 0, "max": 0 },
+      "defaultVisible": false
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 320 320" role="img" aria-labelledby="title desc">
+  <title id="title">Cat front legs</title>
+  <desc id="desc">Two compact orange front legs ready for walking, jumping, or tapping an object.</desc>
+  <g id="front-legs" fill="#F6A23C" stroke="#17213A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <path id="far-front-leg" d="M207 202 Q195 208 197 227 L201 272 Q202 284 214 284 H234 Q246 284 244 272 L238 218 Q236 201 222 198 Z"/>
+    <path id="near-front-leg" d="M231 197 Q218 204 221 226 L225 273 Q226 286 239 286 H260 Q273 286 270 273 L261 211 Q258 194 244 192 Z"/>
+  </g>
+</svg>

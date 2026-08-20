@@ -8,8 +8,9 @@ export class StableStateGoal implements Goal {
     const object = state.objects[this.definition.objectId];
     const matches =
       object !== undefined &&
-      object.location === this.definition.location &&
-      object.condition === this.definition.state;
+      object.zoneId === this.definition.zoneId &&
+      object.orientation === this.definition.orientation &&
+      !object.isBeingDragged;
     const progressMs = matches
       ? Math.min(this.definition.durationMs, previousProgressMs + Math.max(0, deltaMs))
       : 0;

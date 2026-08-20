@@ -1,11 +1,11 @@
-import type { LocationId, ObjectCondition, ObjectId } from '../types/identifiers';
+import type { BottleOrientation, ObjectId, ZoneId } from '../types/identifiers';
 import type { WorldState } from '../types/WorldTypes';
 
 export interface StableObjectStateGoalDefinition {
   readonly type: 'stable-object-state';
   readonly objectId: ObjectId;
-  readonly location: LocationId;
-  readonly state: ObjectCondition;
+  readonly zoneId: ZoneId;
+  readonly orientation: BottleOrientation;
   readonly durationMs: number;
 }
 

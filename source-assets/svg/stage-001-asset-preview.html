@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Place &amp; See — Stage 001 SVG Asset Preview</title>
+  <style>
+    :root { color: #17213a; background: #d8d1c3; font-family: system-ui, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 24px; display: grid; place-items: start center; }
+    .board { position: relative; width: 1600px; height: 900px; overflow: hidden; background: #f7f1e3; box-shadow: 0 12px 40px #17213a33; }
+    .title { position: absolute; left: 42px; top: 30px; margin: 0; font-size: 28px; }
+    .subtitle { position: absolute; left: 44px; top: 72px; margin: 0; color: #17213aaa; }
+    .floor { position: absolute; left: 0; right: 0; top: 665px; border-top: 5px solid #17213a; }
+    .asset { position: absolute; object-fit: contain; }
+    .label { position: absolute; padding: 5px 9px; border: 2px solid #17213a; border-radius: 999px; background: #fff4d6; font: 600 13px ui-monospace, monospace; white-space: nowrap; }
+    .shelf { left: 70px; top: 315px; width: 240px; height: 320px; }
+    .toy { left: 148px; top: 388px; width: 75px; height: 75px; }
+    .chair { left: 355px; top: 414px; width: 200px; height: 250px; }
+    .cat { left: 410px; top: 484px; width: 180px; height: 180px; }
+    .desk { left: 635px; top: 365px; width: 500px; height: 300px; }
+    .mat { left: 827px; top: 391px; width: 150px; height: 75px; }
+    .bottle { left: 869px; top: 300px; width: 70px; height: 110px; }
+    .food { left: 602px; top: 606px; width: 80px; height: 80px; }
+    .puddle { left: 1250px; top: 680px; width: 150px; height: 75px; }
+    .expressions { position: absolute; left: 1125px; top: 115px; display: flex; gap: 16px; }
+    .face-card { width: 136px; padding: 10px; border: 3px solid #17213a; border-radius: 18px; background: #fff4d6; text-align: center; }
+    .face-stack { position: relative; width: 110px; height: 110px; margin: auto; overflow: hidden; }
+    .face-stack img { position: absolute; width: 110px; height: 110px; left: 0; top: 0; object-fit: contain; }
+    .face-card code { display: block; margin-top: 5px; font-size: 11px; }
+    .palette { position: absolute; left: 1180px; top: 530px; display: flex; gap: 8px; }
+    .swatch { width: 34px; height: 34px; border: 3px solid #17213a; border-radius: 50%; }
+    .note { position: absolute; left: 1125px; top: 586px; width: 390px; line-height: 1.45; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <main class="board" aria-label="Stage 001 SVG asset review board">
+    <h1 class="title">Place &amp; See — Stage 001 SVG Review</h1>
+    <p class="subtitle">1600×900 composition · source-assets/svg · transparent runtime assets</p>
+    <div class="floor"></div>
+
+    <img class="asset shelf" src="furniture/shelf.svg" alt="shelf.svg" />
+    <img class="asset toy" src="props/toy-mouse.svg" alt="toy-mouse.svg" />
+    <img class="asset chair" src="furniture/chair.svg" alt="chair.svg" />
+    <img class="asset cat" src="characters/cat/assembled-preview.svg" alt="assembled-preview.svg" />
+    <img class="asset desk" src="furniture/desk.svg" alt="desk.svg" />
+    <img class="asset mat" src="props/non-slip-mat.svg" alt="non-slip-mat.svg" />
+    <img class="asset bottle" src="props/bottle.svg" alt="bottle.svg" />
+    <img class="asset food" src="props/cat-food.svg" alt="cat-food.svg" />
+    <img class="asset puddle" src="props/water-puddle.svg" alt="water-puddle.svg" />
+
+    <span class="label" style="left:90px;top:640px">furniture/shelf.svg</span>
+    <span class="label" style="left:130px;top:355px">props/toy-mouse.svg</span>
+    <span class="label" style="left:340px;top:680px">furniture/chair.svg</span>
+    <span class="label" style="left:430px;top:450px">characters/cat/assembled-preview.svg</span>
+    <span class="label" style="left:790px;top:690px">furniture/desk.svg</span>
+    <span class="label" style="left:800px;top:445px">props/non-slip-mat.svg</span>
+    <span class="label" style="left:850px;top:270px">props/bottle.svg</span>
+    <span class="label" style="left:580px;top:700px">props/cat-food.svg</span>
+    <span class="label" style="left:1240px;top:762px">props/water-puddle.svg</span>
+
+    <section class="expressions" aria-label="Cat facial expression comparison">
+      <div class="face-card"><div class="face-stack"><img src="characters/cat/head.svg" alt="" /><img src="characters/cat/face-idle.svg" alt="idle face" /></div><code>face-idle.svg</code></div>
+      <div class="face-card"><div class="face-stack"><img src="characters/cat/head.svg" alt="" /><img src="characters/cat/face-curious.svg" alt="curious face" /></div><code>face-curious.svg</code></div>
+      <div class="face-card"><div class="face-stack"><img src="characters/cat/head.svg" alt="" /><img src="characters/cat/face-happy.svg" alt="happy face" /></div><code>face-happy.svg</code></div>
+    </section>
+
+    <div class="palette" aria-label="Asset palette">
+      <span class="swatch" style="background:#f6a23c"></span><span class="swatch" style="background:#e8b45a"></span>
+      <span class="swatch" style="background:#59d8d0"></span><span class="swatch" style="background:#ff6b6b"></span>
+      <span class="swatch" style="background:#ffca5c"></span><span class="swatch" style="background:#fff4d6"></span>
+    </div>
+    <p class="note"><strong>검수 기준:</strong> 굵은 navy 외곽선, 평면 채색, 얕은 가구 윗면, 명확한 소품 실루엣. 이 HTML은 원본 SVG 검수 전용이며 게임 런타임에서 로드하지 않습니다.</p>
+  </main>
+</body>
+</html>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 384 192" role="img" aria-labelledby="title desc">
+  <title id="title">Non-slip bottle mat</title>
+  <desc id="desc">A rounded turquoise desk mat with a cream circular bottle placement marker.</desc>
+  <g id="non-slip-mat" stroke="#17213A" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+    <rect id="mat-body" x="24" y="30" width="336" height="132" rx="34" fill="#59D8D0"/>
+    <ellipse id="bottle-marker" cx="192" cy="96" rx="58" ry="42" fill="#FFF4D6"/>
+    <path id="grip-left" d="M66 73 L91 57 M62 112 L92 90 M77 136 L102 118" fill="none" stroke-width="9"/>
+    <path id="grip-right" d="M318 73 L293 57 M322 112 L292 90 M307 136 L282 118" fill="none" stroke-width="9"/>
+  </g>
+</svg>

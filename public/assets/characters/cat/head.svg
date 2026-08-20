@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 320 320" role="img" aria-labelledby="title desc">
+  <title id="title">Cat head</title>
+  <desc id="desc">A round orange three-quarter cat head facing right, with short ears and no facial features.</desc>
+  <g id="head" stroke="#17213A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <path id="head-shape" d="M184 105 L190 65 Q192 54 202 62 L225 81 Q247 78 265 89 L282 74 Q291 67 292 79 L291 119 Q299 138 288 158 Q273 184 234 187 Q197 190 179 165 Q163 143 176 119 Z" fill="#F6A23C"/>
+    <path id="left-inner-ear" d="M194 76 L198 99 Q206 90 216 85 Z" fill="#FF6B6B" stroke-width="6"/>
+    <path id="right-inner-ear" d="M271 92 L286 82 L286 110 Z" fill="#FF6B6B" stroke-width="6"/>
+    <path id="muzzle" d="M224 142 Q242 130 264 142 Q274 151 266 164 Q252 178 229 168 Q216 160 224 142 Z" fill="#FFF4D6" stroke-width="6"/>
+  </g>
+</svg>

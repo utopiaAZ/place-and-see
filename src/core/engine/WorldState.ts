@@ -1,14 +1,11 @@
 import type { PuzzleStageDefinition } from '../types/PuzzleStageDefinition';
 import type { ActorState, ObjectState, WorldState } from '../types/WorldTypes';
 
-const cloneObject = (object: ObjectState): ObjectState => ({
-  ...object,
-  position: { ...object.position },
-});
-
+const cloneObject = (object: ObjectState): ObjectState => ({ ...object, position: { ...object.position } });
 const cloneActor = (actor: ActorState): ActorState => ({
   ...actor,
   position: { ...actor.position },
+  homePosition: { ...actor.homePosition },
 });
 
 export function createInitialWorldState(stage: PuzzleStageDefinition): WorldState {
@@ -17,12 +14,11 @@ export function createInitialWorldState(stage: PuzzleStageDefinition): WorldStat
     elapsedMs: 0,
     objects: Object.fromEntries(stage.objects.map((object) => [object.id, cloneObject(object)])),
     actors: Object.fromEntries(stage.actors.map((actor) => [actor.id, cloneActor(actor)])),
-    goal: {
-      active: false,
-      stableForMs: 0,
-      requiredMs: stage.goal.durationMs,
-      completed: false,
-    },
+    goal: { active: false, stableForMs: 0, requiredMs: stage.goal.durationMs, completed: false, progress: 0 },
+    progressState: 'playing',
+    status: 'observing',
+    spillVisible: false,
+    spillPosition: null,
   };
 }
 
@@ -32,5 +28,6 @@ export function cloneWorldState(state: WorldState): WorldState {
     objects: Object.fromEntries(Object.entries(state.objects).map(([id, object]) => [id, cloneObject(object)])),
     actors: Object.fromEntries(Object.entries(state.actors).map(([id, actor]) => [id, cloneActor(actor)])),
     goal: { ...state.goal },
+    spillPosition: state.spillPosition ? { ...state.spillPosition } : null,
   };
 }

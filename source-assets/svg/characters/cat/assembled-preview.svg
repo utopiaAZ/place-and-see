@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 320 320" role="img" aria-labelledby="title desc">
+  <title id="title">Assembled Place &amp; See cat</title>
+  <desc id="desc">The complete orange cat assembled from the runtime parts in rig layer order with the idle face.</desc>
+  <g id="back-legs" fill="#F6A23C" stroke="#17213A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <path id="far-back-leg" d="M106 216 Q83 218 77 244 L73 270 Q72 282 85 284 H126 Q138 284 137 273 L133 236 Q130 218 106 216 Z"/>
+    <path id="near-back-leg" d="M145 218 Q122 224 119 251 L117 273 Q116 284 129 286 H172 Q185 286 183 274 L177 238 Q173 219 145 218 Z"/>
+  </g>
+  <g id="tail" stroke="#17213A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <path id="tail-base" d="M111 206 Q70 216 47 190 Q24 163 38 127 Q49 99 73 104 Q91 109 82 129 Q72 151 85 165 Q100 180 125 166 Z" fill="#F6A23C"/>
+    <path id="tail-tip" d="M38 127 Q47 101 68 103 Q82 105 84 117 Q72 112 65 126 Q59 139 62 150 Q43 147 38 127 Z" fill="#FFF4D6"/>
+  </g>
+  <g id="body" stroke="#17213A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <path id="body-shape" d="M107 137 Q76 153 80 200 Q84 246 126 259 Q169 272 214 251 Q245 237 242 197 Q239 153 203 139 Q156 121 107 137 Z" fill="#F6A23C"/>
+    <path id="belly-patch" d="M146 158 Q117 174 121 211 Q125 244 157 250 Q190 255 211 236 Q226 220 220 190 Q214 162 185 153 Q164 147 146 158 Z" fill="#FFF4D6" stroke-width="7"/>
+  </g>
+  <g id="front-legs" fill="#F6A23C" stroke="#17213A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <path id="far-front-leg" d="M207 202 Q195 208 197 227 L201 272 Q202 284 214 284 H234 Q246 284 244 272 L238 218 Q236 201 222 198 Z"/>
+    <path id="near-front-leg" d="M231 197 Q218 204 221 226 L225 273 Q226 286 239 286 H260 Q273 286 270 273 L261 211 Q258 194 244 192 Z"/>
+  </g>
+  <g id="head" stroke="#17213A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <path id="head-shape" d="M184 105 L190 65 Q192 54 202 62 L225 81 Q247 78 265 89 L282 74 Q291 67 292 79 L291 119 Q299 138 288 158 Q273 184 234 187 Q197 190 179 165 Q163 143 176 119 Z" fill="#F6A23C"/>
+    <path id="left-inner-ear" d="M194 76 L198 99 Q206 90 216 85 Z" fill="#FF6B6B" stroke-width="6"/>
+    <path id="right-inner-ear" d="M271 92 L286 82 L286 110 Z" fill="#FF6B6B" stroke-width="6"/>
+    <path id="muzzle" d="M224 142 Q242 130 264 142 Q274 151 266 164 Q252 178 229 168 Q216 160 224 142 Z" fill="#FFF4D6" stroke-width="6"/>
+  </g>
+  <g id="face-idle" fill="none" stroke="#17213A" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path id="left-eye" d="M205 123 Q215 119 223 123"/>
+    <path id="right-eye" d="M250 122 Q259 119 267 124"/>
+    <path id="nose" d="M239 146 L247 146 L243 152 Z" fill="#17213A"/>
+    <path id="mouth" d="M243 153 Q240 161 233 160 M243 153 Q248 160 254 158"/>
+    <path id="whiskers-left" d="M226 153 L205 148 M226 160 L204 164"/>
+    <path id="whiskers-right" d="M259 151 L280 145 M259 159 L281 161"/>
+  </g>
+</svg>

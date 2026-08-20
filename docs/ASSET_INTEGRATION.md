@@ -22,3 +22,10 @@ Container 생성으로 교체합니다. public API(`setPosition`, `showInterest`
 
 외부 이미지를 자동 다운로드하지 않으며, 모든 원본의 제작 기록과 라이선스/출처는
 `docs/AI_USAGE_LOG.md` 또는 인접 메타데이터에 기록합니다.
+
+## Stage 001 SVG 계약
+
+Stage 001의 편집 원본은 `source-assets/svg/{furniture,props,characters/cat}`에, 현재 승인된 런타임
+복제본은 `public/assets/`의 동일 상대 경로에 둡니다. 고양이 파츠는 모두 `viewBox="0 0 320 320"`을
+공유하고 `cat-rig.json`의 depth와 pivot을 사용합니다. 원본과 런타임 복제본이 달라진 경우 검증
+실패로 취급하며, 수정은 원본에서 먼저 진행합니다.

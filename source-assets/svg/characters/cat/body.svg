@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 320 320" role="img" aria-labelledby="title desc">
+  <title id="title">Cat body</title>
+  <desc id="desc">An asymmetrical orange bean-shaped body with a cream belly on the shared cat rig canvas.</desc>
+  <g id="body" stroke="#17213A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <path id="body-shape" d="M107 137 Q76 153 80 200 Q84 246 126 259 Q169 272 214 251 Q245 237 242 197 Q239 153 203 139 Q156 121 107 137 Z" fill="#F6A23C"/>
+    <path id="belly-patch" d="M146 158 Q117 174 121 211 Q125 244 157 250 Q190 255 211 236 Q226 220 220 190 Q214 162 185 153 Q164 147 146 158 Z" fill="#FFF4D6" stroke-width="7"/>
+  </g>
+</svg>

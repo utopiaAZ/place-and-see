@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 384 192" role="img" aria-labelledby="title desc">
+  <title id="title">Spilled water puddle</title>
+  <desc id="desc">A simple irregular turquoise puddle with three separated droplets.</desc>
+  <g id="water-puddle" fill="#59D8D0" stroke="#17213A" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+    <path id="main-puddle" d="M57 115 Q76 87 119 93 Q143 57 187 76 Q226 48 254 81 Q302 75 329 107 Q346 130 319 144 Q279 165 223 149 Q180 168 137 148 Q87 161 58 140 Q44 130 57 115 Z" opacity="0.72"/>
+    <g id="droplets">
+      <path id="drop-left" d="M44 68 Q53 48 62 68 Q69 83 54 88 Q38 83 44 68 Z" opacity="0.78"/>
+      <path id="drop-top" d="M184 31 Q193 12 202 31 Q208 45 194 50 Q179 45 184 31 Z" opacity="0.78"/>
+      <path id="drop-right" d="M326 55 Q334 39 342 55 Q348 68 335 72 Q322 68 326 55 Z" opacity="0.78"/>
+    </g>
+  </g>
+</svg>

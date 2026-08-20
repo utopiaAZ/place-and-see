@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 640 384" role="img" aria-labelledby="title desc">
+  <title id="title">Place &amp; See rounded desk</title>
+  <desc id="desc">A broad ochre desk with a shallow visible top, one cream drawer, and sturdy rounded legs.</desc>
+  <g id="desk" stroke="#17213A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <path id="desktop-top" d="M62 78 Q62 62 80 58 H548 Q568 58 579 76 L604 108 Q612 120 594 120 H70 Q50 120 56 102 Z" fill="#FFF4D6"/>
+    <path id="desktop-front" d="M56 108 Q56 98 68 98 H596 Q608 98 608 111 V158 Q608 170 596 170 H68 Q56 170 56 158 Z" fill="#E8B45A"/>
+    <path id="left-leg" d="M86 170 H154 L144 344 Q143 356 131 356 H99 Q87 356 87 344 Z" fill="#E8B45A"/>
+    <path id="right-leg" d="M510 170 H578 L577 344 Q577 356 565 356 H533 Q521 356 520 344 Z" fill="#E8B45A"/>
+    <path id="support-bar" d="M145 270 H521 V306 H143 Z" fill="#FFF4D6"/>
+    <g id="drawer">
+      <path id="drawer-front" d="M374 118 H564 V158 H374 Q364 158 364 148 V128 Q364 118 374 118 Z" fill="#FFF4D6"/>
+      <path id="drawer-handle" d="M448 137 H482" fill="none"/>
+    </g>
+  </g>
+</svg>

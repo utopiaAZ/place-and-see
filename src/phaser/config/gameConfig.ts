@@ -8,11 +8,10 @@ export function createGameConfig(parent: HTMLElement, bridge: GameBridge): Phase
   return {
     type: Phaser.AUTO,
     parent,
-    width: 800,
-    height: 520,
-    backgroundColor: '#f9f1df',
+    width: 1600,
+    height: 900,
+    backgroundColor: '#f7f1e3',
     scene: [BootScene, PreloadScene, RoomScene],
-    physics: { default: undefined },
     scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
     render: { antialias: true, pixelArt: false },
     callbacks: {

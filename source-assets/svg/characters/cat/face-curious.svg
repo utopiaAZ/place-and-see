@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 320 320" role="img" aria-labelledby="title desc">
+  <title id="title">Cat curious face</title>
+  <desc id="desc">An alert curious expression looking toward the upper right, aligned to the shared cat head canvas.</desc>
+  <g id="face-curious" stroke="#17213A" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <ellipse id="left-eye" cx="215" cy="122" rx="9" ry="13" fill="#FFF4D6"/>
+    <ellipse id="right-eye" cx="259" cy="120" rx="9" ry="13" fill="#FFF4D6"/>
+    <ellipse id="left-pupil" cx="219" cy="118" rx="3.5" ry="6" fill="#17213A" stroke="none"/>
+    <ellipse id="right-pupil" cx="263" cy="116" rx="3.5" ry="6" fill="#17213A" stroke="none"/>
+    <path id="nose" d="M239 146 L247 146 L243 152 Z" fill="#17213A"/>
+    <path id="mouth" d="M243 153 Q246 158 253 157" fill="none"/>
+    <path id="whiskers-left" d="M226 153 L205 148 M226 160 L204 164" fill="none"/>
+    <path id="whiskers-right" d="M259 151 L280 145 M259 159 L281 161" fill="none"/>
+  </g>
+</svg>

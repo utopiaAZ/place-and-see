@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 320 320" role="img" aria-labelledby="title desc">
+  <title id="title">Cat back legs</title>
+  <desc id="desc">Two short rounded orange hind legs positioned on the shared cat rig canvas.</desc>
+  <g id="back-legs" fill="#F6A23C" stroke="#17213A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <path id="far-back-leg" d="M106 216 Q83 218 77 244 L73 270 Q72 282 85 284 H126 Q138 284 137 273 L133 236 Q130 218 106 216 Z"/>
+    <path id="near-back-leg" d="M145 218 Q122 224 119 251 L117 273 Q116 284 129 286 H172 Q185 286 183 274 L177 238 Q173 219 145 218 Z"/>
+  </g>
+</svg>

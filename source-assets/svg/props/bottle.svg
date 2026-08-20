@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 192 256" role="img" aria-labelledby="title desc">
+  <title id="title">Reusable water bottle</title>
+  <desc id="desc">An upright turquoise reusable bottle with a yellow cap and visible cream water area.</desc>
+  <g id="bottle" stroke="#17213A" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+    <g id="bottle-body">
+      <path id="body-shape" d="M68 63 Q65 80 52 92 Q42 102 42 122 V218 Q42 237 61 237 H131 Q150 237 150 218 V122 Q150 102 140 92 Q127 80 124 63 Z" fill="#59D8D0"/>
+    </g>
+    <g id="internal-water">
+      <path id="water-fill" d="M55 150 Q96 140 137 150 V215 Q137 224 128 224 H64 Q55 224 55 215 Z" fill="#FFF4D6" stroke-width="8"/>
+    </g>
+    <g id="bottle-cap">
+      <path id="neck" d="M72 58 V35 H120 V58" fill="#FFF4D6"/>
+      <path id="cap" d="M65 22 Q65 14 74 14 H118 Q127 14 127 22 V40 H65 Z" fill="#FFCA5C"/>
+      <path id="cap-ridge" d="M78 22 V32 M96 22 V32 M114 22 V32" fill="none" stroke-width="7"/>
+    </g>
+  </g>
+</svg>

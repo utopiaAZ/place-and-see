@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 320 320" role="img" aria-labelledby="title desc">
+  <title id="title">Cat happy face</title>
+  <desc id="desc">A satisfied closed-eye smile aligned to the shared cat head canvas.</desc>
+  <g id="face-happy" fill="none" stroke="#17213A" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path id="left-eye" d="M204 126 Q214 114 224 126"/>
+    <path id="right-eye" d="M249 125 Q259 113 269 125"/>
+    <path id="nose" d="M239 146 L247 146 L243 152 Z" fill="#17213A"/>
+    <path id="mouth" d="M230 156 Q243 170 257 155"/>
+    <path id="whiskers-left" d="M226 153 L205 148 M226 160 L204 164"/>
+    <path id="whiskers-right" d="M259 151 L280 145 M259 159 L281 161"/>
+  </g>
+</svg>

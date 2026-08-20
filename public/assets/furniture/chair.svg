@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 320 384" role="img" aria-labelledby="title desc">
+  <title id="title">Rounded room chair</title>
+  <desc id="desc">A simple low-priority ochre chair with a cream back panel and sturdy seat.</desc>
+  <g id="chair" stroke="#17213A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <g id="backrest">
+      <path id="back-post-left" d="M66 51 Q66 39 78 39 H91 Q103 39 103 51 V238 H66 Z" fill="#E8B45A"/>
+      <path id="back-post-right" d="M217 51 Q217 39 229 39 H242 Q254 39 254 51 V238 H217 Z" fill="#E8B45A"/>
+      <path id="back-panel" d="M90 62 H230 V158 Q230 170 218 170 H102 Q90 170 90 158 Z" fill="#FFF4D6"/>
+    </g>
+    <g id="seat">
+      <path id="seat-top" d="M55 190 L79 170 H241 L266 190 Q272 196 262 201 H63 Q48 201 55 190 Z" fill="#FFF4D6"/>
+      <path id="seat-front" d="M58 198 H263 V231 Q263 241 253 241 H68 Q58 241 58 231 Z" fill="#E8B45A"/>
+    </g>
+    <g id="legs" fill="#E8B45A">
+      <path id="front-left-leg" d="M74 239 H110 L104 348 Q103 358 93 358 H82 Q72 358 73 348 Z"/>
+      <path id="front-right-leg" d="M211 239 H247 L248 348 Q249 358 239 358 H228 Q218 358 217 348 Z"/>
+    </g>
+  </g>
+</svg>
