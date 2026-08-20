@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { STAGE_001_RIG, STAGE_001_SVG_ASSETS } from '../assets/stage001AssetManifest';
+import { STAGE_002_SVG_ASSETS } from '../assets/stage002AssetManifest';
 
 export class PreloadScene extends Phaser.Scene {
   public constructor() { super('PreloadScene'); }
@@ -11,8 +12,12 @@ export class PreloadScene extends Phaser.Scene {
       });
     }
     for (const asset of STAGE_001_SVG_ASSETS) this.load.svg(asset.key, asset.url, asset.loadSize);
+    for (const asset of STAGE_002_SVG_ASSETS) this.load.svg(asset.key, asset.url, asset.loadSize);
     this.load.json(STAGE_001_RIG.key, STAGE_001_RIG.url);
   }
 
-  public create(): void { this.scene.start('RoomScene'); }
+  public create(): void {
+    const bridge = this.registry.get('gameBridge') as import('../../bridge/GameBridge').GameBridge;
+    this.scene.start(bridge.getStage().id === 'stage-002' ? 'StageTwoScene' : 'RoomScene');
+  }
 }

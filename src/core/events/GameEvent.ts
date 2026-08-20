@@ -24,6 +24,19 @@ export type GameEvent =
   | { readonly type: 'CAT_RETURNING' }
   | { readonly type: 'BOTTLE_STABILIZED_BY_MAT' }
   | { readonly type: 'STAGE_COMPLETED' }
+  | { readonly type: 'FAN_STARTED' }
+  | { readonly type: 'FAN_TURNED_TOWARD_DESK' }
+  | { readonly type: 'FAN_SLOWING_DOWN' }
+  | { readonly type: 'FAN_STOPPED' }
+  | { readonly type: 'PLUG_UNPLUGGED' }
+  | { readonly type: 'PAPER_PLACED' }
+  | { readonly type: 'PAPER_FLUTTER_STARTED' }
+  | { readonly type: 'PAPER_FLUTTER_STOPPED' }
+  | { readonly type: 'PAPER_BLOWN_AWAY'; readonly position: Position }
+  | { readonly type: 'PAPER_WEIGHTED' }
+  | { readonly type: 'PAPER_WEIGHT_REMOVED' }
+  | { readonly type: 'AIRFLOW_BLOCKED' }
+  | { readonly type: 'AIRFLOW_UNBLOCKED' }
   | { readonly type: 'STAGE_RESET'; readonly state: WorldState }
   | { readonly type: 'OBJECT_DROP_REJECTED'; readonly objectId: ObjectId; readonly reason: string }
   | { readonly type: 'COMMAND_REJECTED'; readonly reason: string };

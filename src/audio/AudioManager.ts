@@ -2,6 +2,7 @@ import type { AudioAssetDefinition, AudioManifest } from './AudioManifest';
 import { soundEventForGameEvent, type SoundEvent } from './SoundEventMap';
 import type { AudioSettings } from './soundCategories';
 import type { GameEvent } from '../core/events/GameEvent';
+import type { WorldState } from '../core/types/WorldTypes';
 
 export interface AudioPlaybackPort {
   unlock(): Promise<boolean>;
@@ -55,12 +56,15 @@ export class AudioManager {
 
   public handleGameEvent(event: GameEvent): void {
     if (event.type === 'CAT_RETURNING') this.stopByEvent('CAT_PLAYING');
+    if (event.type === 'PAPER_FLUTTER_STOPPED' || event.type === 'PAPER_BLOWN_AWAY') this.stopByEvent('PAPER_FLUTTER_STARTED');
+    if (event.type === 'FAN_STOPPED') this.stopByEvent('FAN_STARTED');
     if (event.type === 'STAGE_COMPLETED') this.stopBehaviorLoops();
     if (event.type === 'STAGE_RESET') {
       this.stopAll();
       this.playedOnce.clear();
       this.lastPlayedAt.clear();
       this.recentKeys.length = 0;
+      if (event.state.stageTwo?.fanPower === 'powered') this.play('FAN_STARTED');
     }
     const soundEvent = soundEventForGameEvent(event);
     if (soundEvent) this.play(soundEvent);
@@ -69,6 +73,11 @@ export class AudioManager {
   public play(event: SoundEvent): void {
     const asset = this.manifest?.sounds.find((candidate) => candidate.event === event);
     if (asset) this.playAsset(asset);
+  }
+
+  public syncWorldState(state: WorldState): void {
+    if (state.stageTwo?.fanPower === 'powered') this.play('FAN_STARTED');
+    if (state.stageTwo?.paperState === 'fluttering') this.play('PAPER_FLUTTER_STARTED');
   }
 
   public async playForQa(key: string): Promise<void> {
@@ -86,6 +95,8 @@ export class AudioManager {
   public stopBehaviorLoops(): void {
     this.stopByEvent('CAT_EATING');
     this.stopByEvent('CAT_PLAYING');
+    this.stopByEvent('FAN_STARTED');
+    this.stopByEvent('PAPER_FLUTTER_STARTED');
   }
 
   public stopAll(): void {
@@ -96,6 +107,7 @@ export class AudioManager {
   public updateSettings(settings: AudioSettings): void {
     this.settings = settings;
     this.playback?.setMuted(settings.muted);
+    if (settings.muted) this.stopBehaviorLoops();
   }
 
   public getDebugState(): AudioDebugState {

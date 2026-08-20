@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" role="img">
+  <title>Desk fan blades</title><desc>Four coral rounded blades around a turquoise hub.</desc>
+  <g id="fan-blades" fill="#FF6B6B" stroke="#17213A" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M160 150C96 130 80 78 110 62c32-18 59 32 50 88z"/>
+    <path d="M170 150c20-64 72-80 88-50 18 32-32 59-88 50z"/>
+    <path d="M160 160c64 20 80 72 50 88-32 18-59-32-50-88z"/>
+    <path d="M150 150c-20 64-72 80-88 50-18-32 32-59 88-50z"/>
+  </g>
+</svg>

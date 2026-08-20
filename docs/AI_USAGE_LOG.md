@@ -54,3 +54,29 @@ AI로 만든 코드, 그래픽, 오디오 또는 문서가 최종 프로젝트�
 - 라이선스 또는 출처 확인: 제공된 파일의 출처·제작자·라이선스 정보가 없어 TODO로 유지
 - 검토자: 추후 사람 청취 검수 필요
 - 비고: 새 소리를 생성하거나 원본 MP3를 수정하지 않음
+
+## 2026-08-20 — Stage 2 수직 샘플
+
+- 날짜: 2026-08-20
+- 사용 도구 및 모델: Codex
+- 작업 목적: 회전 선풍기와 날아가는 서류를 주제로 한 두 번째 결정적 수직 샘플 구현
+- 입력 또는 프롬프트 요약: 독립 Rule System, 플러그/물병/파일꽂이 세 해결법, 순수 SVG, Stage 전환, 의미 기반 오디오 수명주기
+- 생성 결과: Stage 2 데이터와 Core 규칙, Fan/Paper Phaser View, 7개 SVG 원본·런타임 복제본, React 전환 UI, Core/Audio/layout 테스트와 문서
+- 사람이 검토·수정할 내용: 선풍기 head와 blade 모션, 서류 flutter/blow-away 타이밍, drag hit area, 세 해결법 발견 가능성
+- 최종 사용 파일: `src/content/stages/stage-002.ts`, `src/core/rules/StageTwoRuleSystem.ts`, Stage 2 Phaser/UI/Test/Docs, `source-assets/svg/props/stage-002`, `public/assets/props/stage-002`
+- 라이선스 또는 출처 확인: 신규 SVG는 외부 이미지 없이 순수 SVG/XML로 작성. 요청된 Stage 2 MP3 3개는 저장소에 없어 추가하지 않음
+- 검토자: 추후 사람 플레이테스트 필요
+- 비고: Git commit/push 미수행
+
+## 2026-08-20 — Stage 2 사운드 통합
+
+- 날짜: 2026-08-20
+- 사용 도구 및 모델: Codex, FFmpeg/ffprobe
+- 작업 목적: 제공된 선풍기·서류 MP3 세 개를 기존 Stage 2 의미 이벤트와 오디오 수명주기에 연결
+- 입력 또는 프롬프트 요약: 원본 보존, 런타임 복제, 파형·무음·레벨 분석, 짧은 loop/one-shot marker, QA와 검증
+- 생성 결과: Stage 2 typed Audio Manifest, Stage별 Manifest registry, 런타임 MP3 3개, Audio QA 노출과 audio validator 확장
+- 사람이 검토·수정할 내용: fan/flutter loop 접합, paper fall 종료점, 게임 연출과의 타이밍 및 상대 음량
+- 최종 사용 파일: `src/audio/stage002AudioManifest.ts`, `src/audio/gameAudioManifest.ts`, `public/assets/audio/edited`, `docs/audio/STAGE_002_AUDIO.md`, 관련 UI/Test/Validator
+- 라이선스 또는 출처 확인: 제공자·원본 URL·제작자·라이선스가 명시되지 않아 TODO 유지, 특정 제공자를 추측하지 않음
+- 검토자: 프로젝트 소유자의 브라우저 청취 검수 필요
+- 비고: 원본 MP3 내용과 Stage 1의 기존 11개 marker를 변경하지 않았으며 Git commit/push 미수행

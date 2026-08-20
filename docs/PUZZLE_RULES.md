@@ -1,4 +1,9 @@
-# Stage 1 퍼즐 규칙
+# 퍼즐 규칙
+
+Stage 1의 상세 규칙은 아래에, Stage 2의 선풍기·서류 규칙은 [Stage 2 규칙](STAGE_002_RULES.md)에
+분리해 기록합니다. 두 Stage는 각각 `StageOneRuleSystem`, `StageTwoRuleSystem`을 사용합니다.
+
+## Stage 1
 
 ## 목표
 
@@ -27,5 +32,5 @@
 브라우저 타이머가 결과를 결정하지 않습니다. Phaser는 고양이 rig, 물병 흔들림/넘어짐, 드롭 피드백을
 Core Event에 맞춰 재생하고 React는 Bridge의 읽기 전용 snapshot으로 상태와 진행률만 표시합니다.
 
-실제 사운드 파일은 아직 없으며 Core Event는 의미 기반 `SoundEvent`로 변환됩니다. 매니페스트에 대응
-파일이 없을 때 `AudioManager`는 재생을 안전하게 생략합니다.
+Core Event는 의미 기반 `SoundEvent`로 변환됩니다. 매니페스트에 대응 파일이 없을 때 `AudioManager`는
+재생을 안전하게 생략합니다.

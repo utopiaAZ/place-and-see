@@ -7,7 +7,7 @@ import type { ZoneId } from '../../src/core/types/identifiers';
 const positions = {
   floor: { x: 520, y: 700 }, shelf: { x: 200, y: 430 }, 'desk-surface': { x: 1200, y: 350 },
 } as const;
-const drop = (engine: PuzzleEngine, objectId: string, zoneId: ZoneId, position = positions[zoneId]) =>
+const drop = (engine: PuzzleEngine, objectId: string, zoneId: ZoneId, position = positions[zoneId as keyof typeof positions]) =>
   engine.dispatch({ type: 'DROP_OBJECT', objectId, zoneId, worldPosition: position });
 const advance = (engine: PuzzleEngine, totalMs: number, stepMs = totalMs) => {
   let remaining = totalMs;

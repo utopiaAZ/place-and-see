@@ -14,5 +14,18 @@ export interface StageDefinition extends PuzzleStageDefinition {
       readonly depth: number;
     }[];
     readonly floorTopY: number;
+    readonly objectVisuals?: Readonly<Record<string, {
+      readonly displaySize: { readonly width: number; readonly height: number };
+      readonly hitSize: { readonly width: number; readonly height: number };
+      readonly depth: number;
+    }>>;
+    readonly stageTwo?: {
+      readonly chairSeatAnchor: { readonly x: number; readonly y: number };
+      readonly fanPosition: { readonly x: number; readonly y: number };
+      readonly fanDisplaySize: { readonly width: number; readonly height: number };
+      readonly fanBaseCableAnchor: { readonly x: number; readonly y: number };
+      readonly outletPosition: { readonly x: number; readonly y: number };
+      readonly outletDisplaySize: { readonly width: number; readonly height: number };
+    };
   };
 }

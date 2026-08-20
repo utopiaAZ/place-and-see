@@ -9,6 +9,10 @@ import type {
   StageProgressState,
   StageStatus,
   ZoneId,
+  FanPowerState,
+  FanDirection,
+  PaperState,
+  PaperProtection,
 } from './identifiers';
 
 export interface ObjectState {
@@ -55,4 +59,19 @@ export interface WorldState {
   readonly status: StageStatus;
   readonly spillVisible: boolean;
   readonly spillPosition: Position | null;
+  readonly stageTwo: StageTwoWorldState | null;
+}
+
+export interface StageTwoWorldState {
+  readonly fanPower: FanPowerState;
+  readonly fanDirection: FanDirection;
+  readonly fanPhaseElapsedMs: number;
+  readonly fanSlowdownRemainingMs: number;
+  readonly bladesSpinning: boolean;
+  readonly plugConnected: boolean;
+  readonly paperState: PaperState;
+  readonly paperFlutterElapsedMs: number;
+  readonly paperProtection: PaperProtection;
+  readonly airflowBlocked: boolean;
+  readonly airflowReachesPaper: boolean;
 }

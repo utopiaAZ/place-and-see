@@ -4,10 +4,10 @@
 올바른 위치에 놓는 데서 끝나지 않고, 주변 사물과 캐릭터의 반응을 살펴 실패 원인을 해결하는 것이
 핵심입니다.
 
-> **현재 상태: Stage 1 vertical slice completed**
+> **현재 상태: Stage 1·2 vertical slices implemented**
 >
-> 프로젝트 전체가 완성된 것은 아니며, 첫 번째 스테이지의 플레이 흐름과 확장 가능한 구조를 검증한
-> 체크포인트입니다.
+> 프로젝트 전체가 완성된 것은 아니며, 두 스테이지의 플레이 흐름과 확장 가능한 구조를 검증한
+> 수직 샘플입니다.
 
 ## 현재 구현 상태
 
@@ -17,9 +17,11 @@
 - 프레임 속도와 독립적인 순수 TypeScript 결정적 Core 시뮬레이션
 - 기본 실패 흐름, 세 가지 해결법, 3초 안정성 성공 판정
 - 실패 후 재시도, 전체 Stage reset과 성공 화면
-- 실제 MP3 효과음 11개, Sound On/Off와 안전한 loop 정리
+- 실제 MP3 효과음 14개, Sound On/Off와 안전한 loop 정리
 - `?audioDebug=1`로 활성화하는 개발용 Audio QA 패널
 - Core·Bridge·Audio 자동 테스트 및 1600×900 브라우저 플레이 검증 완료
+- Stage 2 선풍기·서류 규칙, 플러그/문진/바람막이 해결법과 Stage 전환
+- `?stage=002` 직접 진입과 Stage별 reset
 
 ## Stage 1
 
@@ -39,6 +41,25 @@
 </details>
 
 상세 규칙은 [Stage 1 퍼즐 규칙](docs/PUZZLE_RULES.md)을 참고하세요.
+
+## Stage 2
+
+**미션: 책상 위에 서류를 안전하게 두세요.**
+
+회전하는 선풍기가 책상을 향하면 보호되지 않은 서류가 흔들리다 바닥으로 날아갑니다. 날아간 서류는
+자동 reset되지 않으며 다시 집어 시도할 수 있습니다.
+
+<details>
+<summary>Stage 2 해결 방법 보기</summary>
+
+- 플러그를 뽑고 선풍기가 완전히 멈출 때까지 기다립니다.
+- Stage 1의 물병을 서류 위에 문진으로 놓습니다.
+- 파일꽂이를 선풍기와 서류 사이의 바람막이 zone에 놓습니다.
+
+</details>
+
+상세 규칙은 [Stage 2 퍼즐 규칙](docs/STAGE_002_RULES.md)을 참고하세요. 개발 중에는 `?stage=002`로
+직접 진입할 수 있습니다.
 
 ## 조작 방법
 
@@ -114,9 +135,13 @@ npm run validate:assets
 npm run validate:audio
 ```
 
-현재 체크포인트 기준으로 테스트 46개, Stage 1 데이터 검증, SVG 에셋 구조 검증, Audio Manifest와
-런타임 MP3 11개 검증이 통과했습니다. 브라우저에서는 단일 1600×900 캔버스, 세 해결법, reset,
+현재 기준으로 테스트 75개, Stage 1·2 데이터 검증, Stage 2 SVG 원본/런타임 7쌍 검증, Stage 1·2 Audio Manifest와
+런타임 MP3 14개 검증이 통과합니다. 브라우저에서는 단일 1600×900 캔버스, Stage 전환과 reset,
 사운드 수명주기와 콘솔 warning/error 및 에셋 404 부재를 확인했습니다.
+
+Stage 2의 `fan-loop-01.mp3`, `paper-flutter-01.mp3`, `paper-fall-01.mp3`는 파형 분석 기반 marker로
+연결되었으며, 프로젝트 소유자의 직접 플레이 청취 검수를 통과했습니다. 자세한 값은
+[Stage 2 오디오 문서](docs/audio/STAGE_002_AUDIO.md)에 기록되어 있습니다.
 
 Phaser를 포함한 단일 프로덕션 번들이 500kB를 넘는 Vite 경고는 현재 알려진 비차단 항목입니다.
 
@@ -173,5 +198,5 @@ React·Phaser·Core와 테스트 구현 보조, SVG 제작 지시와 검증, 사
 
 1. 사람 플레이테스트로 조작 이해도와 퍼즐 해답의 발견 가능성 검증
 2. hit area와 고양이·물병의 코미디 타이밍 보정
-3. Stage 2 설계와 데이터 기반 콘텐츠 확장
+3. Stage 3 설계와 데이터 기반 콘텐츠 확장
 4. 필요할 경우 Phaser 번들 분할과 초기 로딩 개선

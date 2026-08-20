@@ -1,6 +1,7 @@
 import type { CommandResult, GameCommand } from '../commands/GameCommand';
 import type { GameEvent, GameEventListener } from '../events/GameEvent';
 import { StageOneRuleSystem, STAGE_ONE_RULE_ID, type RuleResult } from '../rules/StageOneRuleSystem';
+import { StageTwoRuleSystem, STAGE_TWO_RULE_ID } from '../rules/StageTwoRuleSystem';
 import type { PuzzleStageDefinition } from '../types/PuzzleStageDefinition';
 import type { WorldState } from '../types/WorldTypes';
 import { SimulationClock } from './SimulationClock';
@@ -10,12 +11,13 @@ export class PuzzleEngine {
   private state: WorldState;
   private readonly listeners = new Set<GameEventListener>();
   private readonly clock = new SimulationClock();
-  private readonly rules: StageOneRuleSystem;
+  private readonly rules: StageOneRuleSystem | StageTwoRuleSystem;
 
   public constructor(private readonly stage: PuzzleStageDefinition) {
-    if (!stage.activeRuleIds.includes(STAGE_ONE_RULE_ID)) throw new Error(`Stage ${stage.id} must enable ${STAGE_ONE_RULE_ID}.`);
     this.state = createInitialWorldState(stage);
-    this.rules = new StageOneRuleSystem(stage);
+    if (stage.activeRuleIds.includes(STAGE_ONE_RULE_ID)) this.rules = new StageOneRuleSystem(stage);
+    else if (stage.activeRuleIds.includes(STAGE_TWO_RULE_ID)) this.rules = new StageTwoRuleSystem(stage);
+    else throw new Error(`Stage ${stage.id} must enable a supported rule system.`);
   }
 
   public dispatch(command: GameCommand): CommandResult {
@@ -42,6 +44,7 @@ export class PuzzleEngine {
     this.state = createInitialWorldState(this.stage);
     const snapshot = this.getState();
     this.emit({ type: 'STAGE_RESET', state: snapshot });
+    if (snapshot.stageTwo?.fanPower === 'powered') this.emit({ type: 'FAN_STARTED' });
     this.emit({ type: 'STATE_CHANGED', state: snapshot });
   }
 

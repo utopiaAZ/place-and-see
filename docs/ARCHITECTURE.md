@@ -40,7 +40,9 @@ Bridge가 최신 snapshot을 보관하고 React의 `useSyncExternalStore` 및 Ph
 
 ## 렌더링과 규칙 분리
 
-Stage 1의 규칙과 고양이 상태 전이는 `core/rules/StageOneRuleSystem.ts`, 안정성 조건은 `core/goals`에
+Stage 1의 규칙과 고양이 상태 전이는 `core/rules/StageOneRuleSystem.ts`, Stage 2의 선풍기·서류 규칙은
+`core/rules/StageTwoRuleSystem.ts`에 독립적으로 위치합니다. `PuzzleEngine`은 Stage의 활성 Rule ID로
+한 시스템만 선택하므로 Stage 2 규칙이 Stage 1 고양이 상태 머신에 섞이지 않습니다. 안정성 조건은 `core/goals`에
 있습니다. Rule System은 다음 행동 경계까지 시간을 잘라 처리하므로 큰 tick과 작은 tick의 최종 결과가
 같습니다. `RoomScene`과 `CatView`는 Event/상태에 Tween을 붙일 뿐 조건을 재판정하지 않습니다.
 
@@ -58,3 +60,8 @@ microtask까지 미루고 effect 세대를 비교해 즉시 재마운트된 인�
 Bridge는 중복 destroy를 허용하고 모든 구독 해제 함수를 제공하며 `window` 전역을 사용하지 않습니다.
 Scene shutdown과 Bridge destroy는 활성 행동 loop를 정리하고, reset은 loop/cooldown/Stage당 1회 기록을
 초기화합니다. 브라우저 오디오는 최초 사용자 입력에서만 unlock되며 Core 가상 시간과 독립적입니다.
+
+Stage 전환은 React가 Stage별 `GameBridge`와 Phaser lifecycle을 교체하는 방식입니다. 기존 Scene과 Bridge를
+먼저 정리한 뒤 같은 host에 다음 Stage canvas를 마운트하므로 동시에 두 canvas가 존재하지 않습니다.
+Stage 2의 `FanView`와 `PaperView`는 snapshot의 논리 상태를 피벗·Tween으로 표현하며 blade 회전 각도처럼
+퍼즐 결과와 무관한 값만 Phaser가 소유합니다.

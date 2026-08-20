@@ -1,6 +1,6 @@
 import type { GoalDefinition } from '../goals/Goal';
 import type { ActorState, ObjectState } from './WorldTypes';
-import type { ObjectKind, Position, RectangleBounds, RuleId, StageId, ZoneId } from './identifiers';
+import type { ObjectId, ObjectKind, Position, RectangleBounds, RuleId, StageId, ZoneId } from './identifiers';
 
 export interface ZoneDefinition {
   readonly id: ZoneId;
@@ -29,4 +29,21 @@ export interface PuzzleStageDefinition {
   readonly activeRuleIds: readonly RuleId[];
   readonly goal: GoalDefinition;
   readonly timings: StageTimings;
+  readonly stageTwo?: StageTwoDefinition;
+}
+
+export interface StageTwoDefinition {
+  readonly fanPhaseDurationMs: number;
+  readonly fanSlowdownMs: number;
+  readonly paperFlutterMs: number;
+  readonly paperBlowAwayMs: number;
+  readonly documentObjectId: ObjectId;
+  readonly bottleObjectId: ObjectId;
+  readonly blockerObjectId: ObjectId;
+  readonly plugObjectId: ObjectId;
+  readonly documentZoneId: ZoneId;
+  readonly weightZoneId: ZoneId;
+  readonly blockerZoneId: ZoneId;
+  readonly unpluggedZoneId: ZoneId;
+  readonly blownAwayPosition: Position;
 }

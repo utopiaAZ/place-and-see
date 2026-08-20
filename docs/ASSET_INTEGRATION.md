@@ -29,3 +29,10 @@ Stage 001의 편집 원본은 `source-assets/svg/{furniture,props,characters/cat
 복제본은 `public/assets/`의 동일 상대 경로에 둡니다. 고양이 파츠는 모두 `viewBox="0 0 320 320"`을
 공유하고 `cat-rig.json`의 depth와 pivot을 사용합니다. 원본과 런타임 복제본이 달라진 경우 검증
 실패로 취급하며, 수정은 원본에서 먼저 진행합니다.
+
+## Stage 002 SVG 계약
+
+Stage 2 원본은 `source-assets/svg/props/stage-002`, 동일한 런타임 복제본은
+`public/assets/props/stage-002`에 둡니다. `document`, 선풍기 body/head/blades, outlet, plug,
+file-divider의 7개 SVG는 `stage002AssetManifest.ts`에서 2배 로드 크기와 표시 크기로 연결됩니다.
+선풍기 body는 고정하고 head pivot과 blade 중심 회전은 `FanView`가 담당합니다.

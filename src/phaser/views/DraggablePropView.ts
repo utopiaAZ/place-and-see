@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import type { ObjectId } from '../../core/types/identifiers';
-import { getSvgAsset } from '../assets/stage001AssetManifest';
+import { getSvgAsset } from '../assets/stageAssetRegistry';
 import { InteractiveObjectView } from './InteractiveObjectView';
 
 export class DraggablePropView extends InteractiveObjectView {

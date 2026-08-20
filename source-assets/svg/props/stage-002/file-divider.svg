@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 300" role="img">
+  <title>File divider</title><desc>A sturdy turquoise L-shaped desktop file divider.</desc>
+  <g id="file-divider" fill="#59D8D0" stroke="#17213A" stroke-width="11" stroke-linecap="round" stroke-linejoin="round">
+    <path id="divider-back" d="M58 38h186l24 32v178H58z"/>
+    <path id="divider-side" d="M58 88l58 30v130H58z" fill="#FFF4D6"/>
+    <path id="divider-base" d="M36 248h248v28H36z" fill="#E8B45A"/>
+  </g>
+</svg>

@@ -19,6 +19,19 @@ export function createInitialWorldState(stage: PuzzleStageDefinition): WorldStat
     status: 'observing',
     spillVisible: false,
     spillPosition: null,
+    stageTwo: stage.stageTwo ? {
+      fanPower: 'powered',
+      fanDirection: 'away',
+      fanPhaseElapsedMs: 0,
+      fanSlowdownRemainingMs: 0,
+      bladesSpinning: true,
+      plugConnected: true,
+      paperState: 'at-initial-position',
+      paperFlutterElapsedMs: 0,
+      paperProtection: 'none',
+      airflowBlocked: false,
+      airflowReachesPaper: false,
+    } : null,
   };
 }
 
@@ -29,5 +42,6 @@ export function cloneWorldState(state: WorldState): WorldState {
     actors: Object.fromEntries(Object.entries(state.actors).map(([id, actor]) => [id, cloneActor(actor)])),
     goal: { ...state.goal },
     spillPosition: state.spillPosition ? { ...state.spillPosition } : null,
+    stageTwo: state.stageTwo ? { ...state.stageTwo } : null,
   };
 }

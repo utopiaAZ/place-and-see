@@ -17,7 +17,13 @@ export type SoundEvent =
   | 'GOAL_STABILITY_STARTED'
   | 'GOAL_STABILITY_RESET'
   | 'GOAL_COMPLETED'
-  | 'UI_RESET';
+  | 'UI_RESET'
+  | 'FAN_STARTED'
+  | 'FAN_SLOWING_DOWN'
+  | 'FAN_STOPPED'
+  | 'PAPER_FLUTTER_STARTED'
+  | 'PAPER_FLUTTER_STOPPED'
+  | 'PAPER_BLOWN_AWAY';
 
 export function soundEventForGameEvent(event: GameEvent): SoundEvent | undefined {
   switch (event.type) {
@@ -38,6 +44,12 @@ export function soundEventForGameEvent(event: GameEvent): SoundEvent | undefined
     case 'GOAL_STABILITY_RESET': return 'GOAL_STABILITY_RESET';
     case 'STAGE_COMPLETED': return 'GOAL_COMPLETED';
     case 'STAGE_RESET': return 'UI_RESET';
+    case 'FAN_STARTED': return 'FAN_STARTED';
+    case 'FAN_SLOWING_DOWN': return 'FAN_SLOWING_DOWN';
+    case 'FAN_STOPPED': return 'FAN_STOPPED';
+    case 'PAPER_FLUTTER_STARTED': return 'PAPER_FLUTTER_STARTED';
+    case 'PAPER_FLUTTER_STOPPED': return 'PAPER_FLUTTER_STOPPED';
+    case 'PAPER_BLOWN_AWAY': return 'PAPER_BLOWN_AWAY';
     default: return undefined;
   }
 }

@@ -44,10 +44,13 @@ export class GameBridge {
   public setMuted(muted: boolean): void {
     this.audioSettings = { ...this.audioSettings, muted };
     this.audioManager.updateSettings(this.audioSettings);
+    if (!muted) this.audioManager.syncWorldState(this.snapshot);
   }
 
-  public unlockAudio(): Promise<boolean> {
-    return this.audioManager.unlock();
+  public async unlockAudio(): Promise<boolean> {
+    const unlocked = await this.audioManager.unlock();
+    if (unlocked) this.audioManager.syncWorldState(this.snapshot);
+    return unlocked;
   }
 
   public stopAudioLoops(): void {

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 220" role="img">
+  <title>Stage 2 document</title><desc>A cream paper sheet with simple navy checklist marks.</desc>
+  <g id="document" fill="#FFF4D6" stroke="#17213A" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M42 24h206l30 30v142H42z"/>
+    <path id="fold" d="M248 24v32h30" fill="none"/>
+  </g>
+  <g id="document-marks" fill="none" stroke="#59D8D0" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M78 82l10 10 18-24M126 84h98M78 130l10 10 18-24M126 132h76"/>
+  </g>
+</svg>

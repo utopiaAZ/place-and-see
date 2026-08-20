@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 200" role="img">
+  <title>Power plug</title><desc>A rounded coral power plug with a short cable end.</desc>
+  <g id="plug" stroke="#17213A" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M54 62h106q24 0 24 24v42q0 24-24 24H54z" fill="#FF6B6B"/>
+    <path id="prongs" d="M184 88h34M184 126h34" fill="none"/>
+    <path id="cable" d="M54 108H20" fill="none"/>
+    <circle cx="82" cy="107" r="14" fill="#FFCA5C"/>
+  </g>
+</svg>

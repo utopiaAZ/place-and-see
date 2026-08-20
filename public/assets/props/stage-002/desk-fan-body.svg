@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 360" role="img">
+  <title>Desk fan body</title><desc>A rounded turquoise desk fan stand and ochre base.</desc>
+  <g id="fan-stand" stroke="#17213A" stroke-width="11" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M142 138h36l18 138h-72z" fill="#59D8D0"/>
+    <path id="neck" d="M160 122v56" fill="none"/>
+  </g>
+  <path id="fan-base" d="M72 278q0-24 24-24h128q24 0 24 24l18 42H54z" fill="#E8B45A" stroke="#17213A" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle id="power-button" cx="160" cy="294" r="10" fill="#FF6B6B" stroke="#17213A" stroke-width="7"/>
+</svg>

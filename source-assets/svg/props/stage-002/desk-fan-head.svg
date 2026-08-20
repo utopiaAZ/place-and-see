@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" role="img">
+  <title>Desk fan head</title><desc>A rounded cream fan guard designed to oscillate horizontally.</desc>
+  <g id="fan-head" fill="none" stroke="#17213A" stroke-width="11" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="160" cy="150" r="112"/>
+    <circle cx="160" cy="150" r="88" fill="none"/>
+    <path id="guard" d="M160 62v176M72 150h176M98 88l124 124M222 88L98 212" fill="none" stroke-width="7"/>
+    <path id="head-neck" d="M140 260h40l-8 36h-24z" fill="#59D8D0"/>
+  </g>
+</svg>

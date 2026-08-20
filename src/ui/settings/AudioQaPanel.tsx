@@ -9,6 +9,7 @@ interface AudioQaPanelProps {
 export function AudioQaPanel({ bridge }: AudioQaPanelProps) {
   const [state, setState] = useState<AudioDebugState>(() => bridge.getAudioDebugState());
   const [expanded, setExpanded] = useState(true);
+  const stageTwo = bridge.getStage().id === 'stage-002';
 
   useEffect(() => {
     const timer = window.setInterval(() => setState(bridge.getAudioDebugState()), 250);
@@ -28,7 +29,7 @@ export function AudioQaPanel({ bridge }: AudioQaPanelProps) {
   };
 
   return (
-    <aside className={`audio-qa${expanded ? '' : ' collapsed'}`} aria-label="Stage 1 Audio QA">
+    <aside className={`audio-qa${expanded ? '' : ' collapsed'}`} aria-label={`${stageTwo ? 'Stage 2' : 'Stage 1'} Audio QA`}>
       <header>
         <strong>Audio QA</strong>
         <span>{state.unlocked ? 'unlocked' : 'locked'} · {state.muted ? 'muted' : 'audible'}</span>
