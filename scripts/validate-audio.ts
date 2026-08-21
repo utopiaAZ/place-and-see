@@ -10,21 +10,34 @@ import type { SoundEvent } from '../src/audio/SoundEventMap';
 import { stage001 } from '../src/content/stages/stage-001';
 import { stage002 } from '../src/content/stages/stage-002';
 import { stage003 } from '../src/content/stages/stage-003';
+import { publicAssetPathFromUrl } from '../src/assets/publicAssetUrl';
 
 const errors: string[] = [];
 const keys = new Set<string>();
+
+function runtimeAudioPath(asset: AudioAssetDefinition): string | null {
+  try {
+    const publicPath = publicAssetPathFromUrl(asset.url);
+    if (!publicPath.startsWith('assets/audio/edited/')) {
+      errors.push(`Invalid runtime URL for ${asset.key}: ${asset.url}`);
+      return null;
+    }
+    return resolve('public', ...publicPath.split('/'));
+  } catch (error) {
+    errors.push(error instanceof Error ? error.message : `Invalid runtime URL for ${asset.key}: ${asset.url}`);
+    return null;
+  }
+}
+
 for (const definition of STAGE_001_AUDIO_MANIFEST.sounds) {
   const asset: AudioAssetDefinition = definition;
   if (keys.has(asset.key)) errors.push(`Duplicate audio key: ${asset.key}`);
   keys.add(asset.key);
-  if (!asset.url.startsWith('/assets/audio/edited/') || asset.url.includes('..')) {
-    errors.push(`Invalid runtime URL for ${asset.key}: ${asset.url}`);
-  }
-  const runtimePath = resolve('public', asset.url.replace(/^\//, ''));
-  if (!existsSync(runtimePath)) errors.push(`Missing runtime file: ${runtimePath}`);
+  const runtimePath = runtimeAudioPath(asset);
+  if (!runtimePath || !existsSync(runtimePath)) errors.push(`Missing runtime file: ${runtimePath ?? asset.url}`);
   const sourcePath = resolve('source-assets/audio/raw', asset.sourceFile);
   if (!existsSync(sourcePath)) errors.push(`Missing source file: ${sourcePath}`);
-  if (existsSync(runtimePath) && existsSync(sourcePath)) {
+  if (runtimePath && existsSync(runtimePath) && existsSync(sourcePath)) {
     const digest = (path: string) => createHash('sha256').update(readFileSync(path)).digest('hex');
     if (digest(runtimePath) !== digest(sourcePath)) errors.push(`Runtime copy differs from source: ${asset.sourceFile}`);
   }
@@ -45,14 +58,11 @@ for (const definition of STAGE_002_AUDIO_MANIFEST.sounds) {
   const asset: AudioAssetDefinition = definition;
   if (keys.has(asset.key)) errors.push(`Duplicate audio key: ${asset.key}`);
   keys.add(asset.key);
-  if (!asset.url.startsWith('/assets/audio/edited/') || asset.url.includes('..')) {
-    errors.push(`Invalid runtime URL for ${asset.key}: ${asset.url}`);
-  }
-  const runtimePath = resolve('public', asset.url.replace(/^\//, ''));
+  const runtimePath = runtimeAudioPath(asset);
   const sourcePath = resolve('source-assets/audio/raw', asset.sourceFile);
-  if (!existsSync(runtimePath)) errors.push(`Missing runtime file: ${runtimePath}`);
+  if (!runtimePath || !existsSync(runtimePath)) errors.push(`Missing runtime file: ${runtimePath ?? asset.url}`);
   if (!existsSync(sourcePath)) errors.push(`Missing source file: ${sourcePath}`);
-  if (existsSync(runtimePath) && existsSync(sourcePath)) {
+  if (runtimePath && existsSync(runtimePath) && existsSync(sourcePath)) {
     const digest = (path: string) => createHash('sha256').update(readFileSync(path)).digest('hex');
     if (digest(runtimePath) !== digest(sourcePath)) errors.push(`Runtime copy differs from source: ${asset.sourceFile}`);
   }
@@ -70,12 +80,11 @@ for (const definition of STAGE_003_AUDIO_MANIFEST.sounds) {
   const asset: AudioAssetDefinition = definition;
   if (keys.has(asset.key)) errors.push(`Duplicate audio key: ${asset.key}`);
   keys.add(asset.key);
-  if (!asset.url.startsWith('/assets/audio/edited/') || asset.url.includes('..')) errors.push(`Invalid runtime URL for ${asset.key}: ${asset.url}`);
-  const runtimePath = resolve('public', asset.url.replace(/^\//, ''));
+  const runtimePath = runtimeAudioPath(asset);
   const sourcePath = resolve('source-assets/audio/raw', asset.sourceFile);
-  if (!existsSync(runtimePath)) errors.push(`Missing runtime file: ${runtimePath}`);
+  if (!runtimePath || !existsSync(runtimePath)) errors.push(`Missing runtime file: ${runtimePath ?? asset.url}`);
   if (!existsSync(sourcePath)) errors.push(`Missing source file: ${sourcePath}`);
-  if (existsSync(runtimePath) && existsSync(sourcePath)) {
+  if (runtimePath && existsSync(runtimePath) && existsSync(sourcePath)) {
     const digest = (path: string) => createHash('sha256').update(readFileSync(path)).digest('hex');
     if (digest(runtimePath) !== digest(sourcePath)) errors.push(`Runtime copy differs from source: ${asset.sourceFile}`);
   }

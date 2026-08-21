@@ -1,6 +1,7 @@
 import type { AudioManifest } from './AudioManifest';
+import { publicAssetUrl } from '../assets/publicAssetUrl';
 
-const runtimeRoot = '/assets/audio/edited';
+const runtimeRoot = publicAssetUrl('assets/audio/edited');
 
 export const STAGE_001_AUDIO_MANIFEST = {
   version: 1,

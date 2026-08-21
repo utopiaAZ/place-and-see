@@ -1,6 +1,7 @@
 import type { AudioManifest } from './AudioManifest';
+import { publicAssetUrl } from '../assets/publicAssetUrl';
 
-const runtimeRoot = '/assets/audio/edited';
+const runtimeRoot = publicAssetUrl('assets/audio/edited');
 
 /**
  * Stage 2 markers are provisional waveform-based selections. Keep the source MP3s

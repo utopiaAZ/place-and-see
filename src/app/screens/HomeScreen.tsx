@@ -1,5 +1,6 @@
 import { ShellButton } from '../../ui/shell/ShellButton';
 import { ShellScreen } from './ShellScreen';
+import { publicAssetUrl } from '../../assets/publicAssetUrl';
 
 export function HomeScreen({ muted, onToggleMuted, onPlay, onStageSelect, onCredits }: {
   readonly muted: boolean;
@@ -22,8 +23,8 @@ export function HomeScreen({ muted, onToggleMuted, onPlay, onStageSelect, onCred
         <p className="control-hint">Drag objects and observe what happens.</p>
       </section>
       <div className="shell-decoration" aria-hidden="true">
-        <img src="/assets/props/bottle.svg" alt="" />
-        <img src="/assets/props/stage-003/cake.svg" alt="" />
+        <img src={publicAssetUrl('assets/props/bottle.svg')} alt="" />
+        <img src={publicAssetUrl('assets/props/stage-003/cake.svg')} alt="" />
       </div>
     </ShellScreen>
   );

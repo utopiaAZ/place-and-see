@@ -29,6 +29,7 @@
 - Home, Stage Select, Stage Intro, Stage Complete, Demo Complete와 Credits로 이어지는 React 게임 셸
 - 완료 Stage·마지막 선택 Stage·mute를 저장하는 `place-and-see:progress:v1` 진행 상태
 - Start Stage 이후에만 Phaser/runtime을 내려받는 지연 로딩과 접근 가능한 loading/error/retry 화면
+- GitHub Project Pages 하위 경로를 지원하는 production base와 runtime asset URL 처리
 
 ## Stage 1
 
@@ -143,6 +144,12 @@ npm run build
 npx vite preview
 ```
 
+기본 production build는 Project Pages 예상 경로인 `/place-and-see/`를 사용합니다. 로컬 preview는
+`node scripts/serve-subpath-preview.mjs --base /place-and-see/ --port 4176`으로 실행한 뒤
+`http://127.0.0.1:4176/place-and-see/`에서 확인합니다. GitHub Pages workflow와 최초 설정 절차는
+[배포 문서](docs/DEPLOYMENT.md)를 참고하세요. workflow와 Pages 설정은 아직 실제 실행되지 않았으므로 예상
+주소를 Live Demo로 표시하지 않습니다.
+
 ## 검증
 
 ```bash
@@ -155,7 +162,7 @@ npm run validate:assets
 npm run validate:audio
 ```
 
-현재 자동 테스트 208개가 통과합니다. App flow, progress storage, query, lazy runtime과 session lifecycle 테스트를 포함하며 Stage 3는 Core/Phaser/Audio 자동 테스트와 SVG·MP3 원본/런타임 hash 검증을 유지합니다. Stage validator는 3개 Stage, asset validator는 Stage 2·3 SVG 원본/런타임 쌍, audio validator는 Stage 1 MP3 11개·Stage 2 MP3 3개·Stage 3 MP3 4개를 검증합니다. Stage 3 신규 MP3 4개의 marker, volume과 게임 내 재생은 프로젝트 소유자의 직접 청취 검수를 통과했습니다. 기존 Stage 1·2 MP3와 marker는 변경하지 않았습니다.
+현재 자동 테스트 220개가 통과합니다. App flow, progress storage, query, lazy runtime, session lifecycle과 GitHub Pages asset URL/workflow 테스트를 포함하며 Stage 3는 Core/Phaser/Audio 자동 테스트와 SVG·MP3 원본/런타임 hash 검증을 유지합니다. Stage validator는 3개 Stage, asset validator는 Stage 2·3 SVG 원본/런타임 쌍, audio validator는 Stage 1 MP3 11개·Stage 2 MP3 3개·Stage 3 MP3 4개를 검증합니다. Stage 3 신규 MP3 4개의 marker, volume과 게임 내 재생은 프로젝트 소유자의 직접 청취 검수를 통과했습니다. 기존 Stage 1·2 MP3와 marker는 변경하지 않았습니다.
 
 Stage 2의 `fan-loop-01.mp3`, `paper-flutter-01.mp3`, `paper-fall-01.mp3`는 파형 분석 기반 marker로
 연결되었으며, 프로젝트 소유자의 직접 플레이 청취 검수를 통과했습니다. 자세한 값은

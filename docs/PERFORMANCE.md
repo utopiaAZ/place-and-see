@@ -16,6 +16,12 @@ Start Stage gesture
 
 Stage Intro만 열거나 Home, Stage Select와 Credits를 둘러볼 때는 runtime import와 canvas 생성이 발생하지 않습니다.
 
+## GitHub Pages base
+
+production build의 기본 base는 Project Pages 경로 `/place-and-see/`입니다. 개발 서버는 기존대로 `/`를 사용합니다. GitHub Actions에서는 `actions/configure-pages`가 반환한 `base_path`를 `VITE_BASE_PATH`로 전달하고, 공통 `publicAssetUrl()` helper가 SVG, MP3와 JSON URL에 `import.meta.env.BASE_URL`을 한 번만 적용합니다. Phaser lazy chunk는 Vite가 같은 base 아래에서 생성합니다.
+
+하위 경로 build에서는 entry와 lazy chunk가 각각 `/place-and-see/assets/...`를 사용하며 Home 초기 HTML은 lazy chunk를 preload하지 않습니다. runtime 에셋도 같은 prefix를 사용하고 root `/assets/...` 또는 base 중복 URL을 만들지 않습니다.
+
 ## Production bundle 비교
 
 2026-08-21에 동일한 `npm run build`의 Vite `computing gzip size` 출력으로 minified JS raw/gzip 크기를 측정했습니다. CSS와 HTML은 표에서 제외했습니다.

@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { STAGE_002_SVG_ASSETS } from '../src/phaser/assets/stage002AssetManifest';
 import { STAGE_003_SVG_ASSETS } from '../src/phaser/assets/stage003AssetManifest';
+import { publicAssetPathFromUrl } from '../src/assets/publicAssetUrl';
 
 const requiredDirectories = [
   'public/assets/characters', 'public/assets/props', 'public/assets/furniture',
@@ -11,9 +12,16 @@ const missing = requiredDirectories.filter((directory) => !existsSync(resolve(di
 if (missing.length > 0) throw new Error(`Missing asset directories:\n${missing.join('\n')}`);
 const errors: string[] = [];
 for (const asset of [...STAGE_002_SVG_ASSETS, ...STAGE_003_SVG_ASSETS]) {
-  const runtime = resolve('public', asset.url.replace(/^\//, ''));
-  const stageFolder = asset.url.includes('stage-003') ? 'stage-003' : 'stage-002';
-  const source = resolve(`source-assets/svg/props/${stageFolder}`, asset.url.split('/').at(-1)!);
+  let publicPath: string;
+  try {
+    publicPath = publicAssetPathFromUrl(asset.url);
+  } catch (error) {
+    errors.push(error instanceof Error ? error.message : `Invalid runtime SVG URL: ${asset.url}`);
+    continue;
+  }
+  const runtime = resolve('public', ...publicPath.split('/'));
+  const stageFolder = publicPath.includes('stage-003') ? 'stage-003' : 'stage-002';
+  const source = resolve(`source-assets/svg/props/${stageFolder}`, publicPath.split('/').at(-1)!);
   if (!existsSync(runtime)) errors.push(`Missing runtime SVG: ${runtime}`);
   if (!existsSync(source)) errors.push(`Missing source SVG: ${source}`);
   if (!existsSync(runtime) || !existsSync(source)) continue;

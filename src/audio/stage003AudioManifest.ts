@@ -1,6 +1,7 @@
 import type { AudioManifest } from './AudioManifest';
+import { publicAssetUrl } from '../assets/publicAssetUrl';
 
-const runtimeRoot = '/assets/audio/edited';
+const runtimeRoot = publicAssetUrl('assets/audio/edited');
 
 /** Provisional waveform-based markers. Human listening in Audio QA is still required. */
 export const STAGE_003_AUDIO_MANIFEST = {

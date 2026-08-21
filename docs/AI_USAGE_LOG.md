@@ -106,3 +106,16 @@ AI로 만든 코드, 그래픽, 오디오 또는 문서가 최종 프로젝트�
 - 라이선스 또는 출처 확인: 신규 외부 패키지·그래픽·오디오 없음
 - 검토자: 프로젝트 소유자 확인 필요
 - 비고: 20개 테스트 파일의 208개 자동 테스트와 Stage·SVG·Audio validator가 통과했다. Stage 1·2·3 규칙과 SVG/MP3, audio marker/volume은 변경하지 않음
+
+## 2026-08-21 — GitHub Pages 배포 준비
+
+- 날짜: 2026-08-21
+- 사용 도구 및 모델: Codex
+- 작업 목적: Project Pages 하위 경로에서 entry, lazy runtime과 모든 public asset을 안전하게 제공하고 공식 Actions 배포 절차 준비
+- 입력 또는 프롬프트 요약: origin 기반 owner/repository 확인, Vite base, 공통 asset URL helper, validator 강화, 공식 Pages Actions, query 직접 진입과 local subpath 검증
+- 생성 결과: `/place-and-see/` production base, SVG/MP3/JSON URL 결합 계층, Pages workflow, URL·workflow 테스트와 배포 문서
+- 사람이 검토·수정할 내용: 저장소 Settings에서 Pages Source를 GitHub Actions로 선택하고 첫 workflow와 실제 배포 URL, asset 200/MIME, 전체 플레이 흐름을 확인
+- 최종 사용 파일: `vite.config.ts`, `src/assets/publicAssetUrl.ts`, Stage Asset/Audio Manifest, validator, `.github/workflows/deploy-pages.yml`, 관련 Test/Docs
+- 라이선스 또는 출처 확인: 신규 외부 패키지·그래픽·오디오 없음. GitHub 공식 Pages Actions와 문서를 기준으로 구성
+- 검토자: 프로젝트 소유자 확인 필요
+- 비고: Codex는 URL 조사·구현·자동 및 로컬 검증을 지원하며, 사용자가 실제 Pages 설정과 첫 배포를 승인·실행한다. commit, push와 GitHub Settings 변경은 수행하지 않음
