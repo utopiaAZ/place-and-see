@@ -26,6 +26,8 @@
 - Stage 1 → Stage 2 → Stage 3 순차 전환과 Stage 3 `Demo Complete`
 - Stage 3 신규 SVG 6종과 신규 MP3 4종
 - `?stage=002`, `?stage=003`, `?stage=003&audioDebug=1`, `?stage=003&debugZones=1` 개발용 진입
+- Home, Stage Select, Stage Intro, Stage Complete, Demo Complete와 Credits로 이어지는 React 게임 셸
+- 완료 Stage·마지막 선택 Stage·mute를 저장하는 `place-and-see:progress:v1` 진행 상태
 
 ## Stage 1
 
@@ -81,7 +83,11 @@
 - `Sound On` / `Sound Off` 버튼으로 전체 사운드를 음소거하거나 다시 켭니다.
 - 개발 서버 URL에 `?audioDebug=1`을 붙이면 marker, volume, loop와 재생 상태를 확인할 수 있습니다.
 
-키보드 전용 조작과 모바일 세로 모드는 아직 지원하지 않습니다.
+셸 화면은 키보드로 조작할 수 있지만, 퍼즐 drag의 키보드 대체 조작과 모바일 세로 모드는 아직 지원하지 않습니다.
+
+셸의 Play는 가장 이른 미완료 Stage의 Intro로 이동합니다. 각 Intro에서 `Start Stage`를 누른 뒤에만
+Core·GameBridge·Phaser session과 canvas가 만들어집니다. 전체 화면 흐름, 저장 schema와 reset 정책은
+[게임 셸 문서](docs/GAME_SHELL.md)를 참고하세요.
 
 ## 기술 스택
 
@@ -147,7 +153,7 @@ npm run validate:assets
 npm run validate:audio
 ```
 
-현재 자동 테스트 138개가 통과합니다. Stage 3는 Core/Phaser/Audio 자동 테스트와 SVG·MP3 원본/런타임 hash 검증을 포함합니다. Stage validator는 3개 Stage, asset validator는 Stage 2·3 SVG 원본/런타임 쌍, audio validator는 Stage 1 MP3 11개·Stage 2 MP3 3개·Stage 3 MP3 4개를 검증합니다. Stage 3 신규 MP3 4개의 marker, volume과 게임 내 재생은 프로젝트 소유자의 직접 청취 검수를 통과했습니다. 기존 Stage 1·2 MP3와 marker는 변경하지 않았습니다.
+현재 자동 테스트 190개가 통과합니다. App flow, progress storage, query와 session lifecycle 테스트를 포함하며 Stage 3는 Core/Phaser/Audio 자동 테스트와 SVG·MP3 원본/런타임 hash 검증을 유지합니다. Stage validator는 3개 Stage, asset validator는 Stage 2·3 SVG 원본/런타임 쌍, audio validator는 Stage 1 MP3 11개·Stage 2 MP3 3개·Stage 3 MP3 4개를 검증합니다. Stage 3 신규 MP3 4개의 marker, volume과 게임 내 재생은 프로젝트 소유자의 직접 청취 검수를 통과했습니다. 기존 Stage 1·2 MP3와 marker는 변경하지 않았습니다.
 
 Stage 2의 `fan-loop-01.mp3`, `paper-flutter-01.mp3`, `paper-fall-01.mp3`는 파형 분석 기반 marker로
 연결되었으며, 프로젝트 소유자의 직접 플레이 청취 검수를 통과했습니다. 자세한 값은

@@ -24,6 +24,16 @@ class Playback implements AudioPlaybackPort {
 }
 
 describe('Stage 3 semantic audio', () => {
+  it('re-evaluates the powered fan loop after direct-entry audio unlock', async () => {
+    const playback = new Playback();
+    const manager = new AudioManager(STAGE_003_AND_SHARED_AUDIO_MANIFEST, playback, DEFAULT_AUDIO_SETTINGS);
+    const bridge = new GameBridge(stage003, manager);
+    await bridge.unlockAudio();
+    await bridge.unlockAudio();
+    expect(playback.plays.filter((key) => key === 'fan-loop-01')).toHaveLength(1);
+    bridge.destroy();
+  });
+
   it('registers four bounded one-shots and preserves shared definitions', () => {
     expect(STAGE_003_AUDIO_MANIFEST.sounds.map((sound) => sound.key)).toEqual(['cake-place-wood-01', 'cake-hit-01', 'candle-light-01', 'candle-blowout-01']);
     expect(STAGE_003_AUDIO_MANIFEST.sounds.every((sound) => sound.loop === false && sound.oncePerStage === false && sound.maxInstances === 1 && sound.durationMs > 0 && sound.startMs + sound.durationMs <= sound.fullDurationMs && sound.volume >= 0 && sound.volume <= 1)).toBe(true);

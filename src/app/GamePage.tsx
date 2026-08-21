@@ -1,48 +1,159 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { AudioManager } from '../audio/AudioManager';
 import { audioManifestForStage } from '../audio/gameAudioManifest';
 import { DEFAULT_AUDIO_SETTINGS } from '../audio/soundCategories';
 import { WebAudioPlaybackBackend } from '../audio/WebAudioPlaybackBackend';
 import { GameBridge } from '../bridge/GameBridge';
-import type { StageDefinition } from '../content/schema/StageDefinition';
-import { stage001, stage002, stage003 } from '../content/stages';
+import type { GameEvent } from '../core/events/GameEvent';
 import { PhaserGame } from '../phaser/PhaserGame';
 import { useGameState } from '../store/useGameState';
 import { GameControls } from '../ui/controls/GameControls';
 import { MissionCard } from '../ui/mission/MissionCard';
 import { StabilityStatus } from '../ui/result/StabilityStatus';
 import { StatusMessage } from '../ui/result/StatusMessage';
-import { SuccessPanel } from '../ui/result/SuccessPanel';
 import { AudioQaPanel } from '../ui/settings/AudioQaPanel';
+import { createInitialFlowState, appFlowReducer, type AppFlowAction } from './flow/appFlowReducer';
+import { GameSessionManager, type ManagedGameSession } from './flow/GameSessionManager';
+import type { ShellStageId } from './flow/AppFlow';
+import { getStageDefinition } from './flow/stageCatalog';
+import { hasDebugQuery, parseStageQuery } from './flow/stageQuery';
+import { readGameProgress, writeGameProgress } from './storage/gameProgressStorage';
+import { CreditsScreen } from './screens/CreditsScreen';
+import { DemoCompleteScreen } from './screens/DemoCompleteScreen';
+import { HomeScreen } from './screens/HomeScreen';
+import { StageCompleteScreen } from './screens/StageCompleteScreen';
+import { StageIntroScreen } from './screens/StageIntroScreen';
+import { StageSelectScreen } from './screens/StageSelectScreen';
 
-const MUTE_STORAGE_KEY = 'place-and-see.audio-muted';
-
-function readStoredMute(): boolean {
-  try { return localStorage.getItem(MUTE_STORAGE_KEY) === 'true'; } catch { return false; }
+interface InitialAppState {
+  readonly progress: ReturnType<typeof readGameProgress>;
+  readonly directStageId: ShellStageId | null;
 }
 
 export function GamePage() {
-  const requested = new URLSearchParams(window.location.search).get('stage');
-  const initialStage = requested === '003' ? 'stage-003' : requested === '002' ? 'stage-002' : 'stage-001';
-  const [stageId, setStageId] = useState<'stage-001' | 'stage-002' | 'stage-003'>(initialStage);
-  const [muted, setMuted] = useState(readStoredMute);
-  const stage = stageId === 'stage-003' ? stage003 : stageId === 'stage-002' ? stage002 : stage001;
-  return <StageSession key={stageId} stage={stage} muted={muted} onMutedChange={setMuted} onSwitchStage={setStageId} />;
+  const [initial] = useState<InitialAppState>(() => {
+    const progress = readGameProgress();
+    const query = parseStageQuery(window.location.search);
+    return { progress, directStageId: query.kind === 'valid' ? query.stageId : null };
+  });
+  const [flow, dispatch] = useReducer(
+    appFlowReducer,
+    createInitialFlowState(initial.progress.completedStageIds, initial.progress.lastPlayedStageId, initial.directStageId),
+  );
+  const [muted, setMuted] = useState(initial.progress.muted);
+  const [sessionManager] = useState(() => new GameSessionManager<GameBridge>((stageId, isMuted) => {
+    const stage = getStageDefinition(stageId);
+    const settings = { ...DEFAULT_AUDIO_SETTINGS, muted: isMuted };
+    return new GameBridge(stage, new AudioManager(audioManifestForStage(stage.id), new WebAudioPlaybackBackend(), settings));
+  }));
+  const [session, setSession] = useState<ManagedGameSession<GameBridge> | null>(null);
+  const lifecycle = useRef({ generation: 0 });
+
+  useEffect(() => {
+    writeGameProgress({
+      version: 1,
+      completedStageIds: flow.completedStageIds,
+      lastPlayedStageId: flow.lastPlayedStageId,
+      muted,
+    });
+  }, [flow.completedStageIds, flow.lastPlayedStageId, muted]);
+
+  useEffect(() => {
+    if (flow.screen !== 'playing' || !flow.selectedStageId || session) return;
+    const active = sessionManager.getCurrent() ?? sessionManager.start(flow.selectedStageId, muted, false);
+    setSession(active);
+  }, [flow.screen, flow.selectedStageId, muted, session, sessionManager]);
+
+  useEffect(() => {
+    const lifecycleState = lifecycle.current;
+    const generation = ++lifecycleState.generation;
+    return () => queueMicrotask(() => {
+      if (lifecycleState.generation === generation) sessionManager.destroy();
+    });
+  }, [sessionManager]);
+
+  const releaseSession = useCallback(() => {
+    const active = sessionManager.getCurrent();
+    if (!active) return;
+    active.bridge.stopAudioLoops();
+    setSession(null);
+    queueMicrotask(() => sessionManager.destroy(active));
+  }, [sessionManager]);
+
+  const leavePlaying = useCallback((action: AppFlowAction) => {
+    releaseSession();
+    dispatch(action);
+  }, [releaseSession]);
+
+  const startStage = () => {
+    if (!flow.selectedStageId) return;
+    const active = sessionManager.start(flow.selectedStageId, muted, true);
+    setSession(active);
+    dispatch({ type: 'START_STAGE' });
+  };
+
+  const toggleMuted = () => {
+    setMuted((current) => {
+      const next = !current;
+      sessionManager.setMuted(next);
+      return next;
+    });
+  };
+
+  const resetProgress = () => {
+    if (!window.confirm('완료한 Stage 기록을 초기화할까요? 사운드 설정은 유지됩니다.')) return;
+    dispatch({ type: 'RESET_PROGRESS' });
+  };
+
+  const selectedStageId = flow.selectedStageId;
+  if (flow.screen === 'home') {
+    return <HomeScreen muted={muted} onToggleMuted={toggleMuted} onPlay={() => dispatch({ type: 'PLAY' })} onStageSelect={() => dispatch({ type: 'SHOW_STAGE_SELECT' })} onCredits={() => dispatch({ type: 'SHOW_CREDITS' })} />;
+  }
+  if (flow.screen === 'stage-select') {
+    return <StageSelectScreen completedStageIds={flow.completedStageIds} muted={muted} onToggleMuted={toggleMuted} onSelect={(stageId) => dispatch({ type: 'SELECT_STAGE', stageId })} onHome={() => dispatch({ type: 'GO_HOME' })} onResetProgress={resetProgress} />;
+  }
+  if (flow.screen === 'credits') {
+    return <CreditsScreen muted={muted} onToggleMuted={toggleMuted} onHome={() => dispatch({ type: 'GO_HOME' })} onResetProgress={resetProgress} />;
+  }
+  if (flow.screen === 'stage-intro' && selectedStageId) {
+    return <StageIntroScreen stageId={selectedStageId} muted={muted} onToggleMuted={toggleMuted} onStart={startStage} onBack={() => dispatch({ type: 'SHOW_STAGE_SELECT' })} />;
+  }
+  if (flow.screen === 'stage-complete' && selectedStageId) {
+    return <StageCompleteScreen stageId={selectedStageId} muted={muted} onToggleMuted={toggleMuted} onNext={() => dispatch({ type: 'NEXT_STAGE' })} onReplay={() => dispatch({ type: 'REPLAY_STAGE' })} onStageSelect={() => dispatch({ type: 'SHOW_STAGE_SELECT' })} />;
+  }
+  if (flow.screen === 'demo-complete') {
+    return <DemoCompleteScreen completedStageIds={flow.completedStageIds} muted={muted} onToggleMuted={toggleMuted} onReplay={() => dispatch({ type: 'SELECT_STAGE', stageId: 'stage-001' })} onStageSelect={() => dispatch({ type: 'SHOW_STAGE_SELECT' })} onCredits={() => dispatch({ type: 'SHOW_CREDITS' })} onHome={() => dispatch({ type: 'GO_HOME' })} />;
+  }
+  if (flow.screen === 'playing' && selectedStageId && session) {
+    return (
+      <StageSession
+        key={`${session.stageId}-${session.bridge.getStage().id}`}
+        bridge={session.bridge}
+        stageId={selectedStageId}
+        muted={muted}
+        onToggleMuted={toggleMuted}
+        onComplete={(stageId) => leavePlaying({ type: 'COMPLETE_STAGE', stageId })}
+        onHome={() => leavePlaying({ type: 'GO_HOME' })}
+        onStageSelect={() => leavePlaying({ type: 'SHOW_STAGE_SELECT' })}
+      />
+    );
+  }
+  return null;
 }
 
-function StageSession({ stage, muted, onMutedChange, onSwitchStage }: {
-  readonly stage: StageDefinition;
+function StageSession({ bridge, stageId, muted, onToggleMuted, onComplete, onHome, onStageSelect }: {
+  readonly bridge: GameBridge;
+  readonly stageId: ShellStageId;
   readonly muted: boolean;
-  readonly onMutedChange: (muted: boolean) => void;
-  readonly onSwitchStage: (stage: 'stage-001' | 'stage-002' | 'stage-003') => void;
+  readonly onToggleMuted: () => void;
+  readonly onComplete: (stageId: ShellStageId) => void;
+  readonly onHome: () => void;
+  readonly onStageSelect: () => void;
 }) {
-  const [bridge] = useState(() => {
-    const settings = { ...DEFAULT_AUDIO_SETTINGS, muted };
-    return new GameBridge(stage, new AudioManager(audioManifestForStage(stage.id), new WebAudioPlaybackBackend(), settings));
-  });
+  const stage = bridge.getStage();
   const gameState = useGameState(bridge);
   const canvasHost = useRef<HTMLDivElement>(null);
-  const lifecycle = useRef({ generation: 0 });
+  const completionHandled = useRef(false);
 
   useEffect(() => {
     const host = canvasHost.current;
@@ -59,31 +170,27 @@ function StageSession({ stage, muted, onMutedChange, onSwitchStage }: {
       window.removeEventListener('keydown', unlock);
       window.removeEventListener('touchstart', unlock);
     };
-    const unlock = () => { void bridge.unlockAudio().then((ok) => { if (ok && !disposed) remove(); }); };
+    const unlock = () => { void bridge.unlockAudio().then((ok) => { if (ok && !disposed) remove(); }).catch(() => undefined); };
     window.addEventListener('pointerdown', unlock, { passive: true });
     window.addEventListener('keydown', unlock);
     window.addEventListener('touchstart', unlock, { passive: true });
     return () => { disposed = true; remove(); };
   }, [bridge]);
 
-  useEffect(() => { bridge.setMuted(muted); }, [bridge, muted]);
-  useEffect(() => {
-    const lifecycleState = lifecycle.current;
-    const generation = ++lifecycleState.generation;
-    return () => queueMicrotask(() => { if (lifecycleState.generation === generation) bridge.destroy(); });
-  }, [bridge]);
+  useEffect(() => bridge.subscribe((event: GameEvent) => {
+    if (event.type !== 'STAGE_COMPLETED' || completionHandled.current) return;
+    completionHandled.current = true;
+    bridge.stopAudioLoops();
+    onComplete(stageId);
+  }), [bridge, onComplete, stageId]);
 
-  const toggleMuted = () => {
-    const next = !muted;
-    onMutedChange(next);
-    bridge.setMuted(next);
-    try { localStorage.setItem(MUTE_STORAGE_KEY, String(next)); } catch { /* Storage is optional. */ }
-  };
+  useEffect(() => { bridge.setMuted(muted); }, [bridge, muted]);
+
   const goalObject = gameState.objects[stage.goal.objectId];
   const goalVisible = goalObject?.zoneId === stage.goal.zoneId || gameState.stageTwo?.paperState === 'fluttering';
-  const qa = import.meta.env.DEV && new URLSearchParams(window.location.search).get('audioDebug') === '1';
-  const isStageTwo = stage.id === 'stage-002';
-  const isStageThree = stage.id === 'stage-003';
+  const qa = import.meta.env.DEV && hasDebugQuery(window.location.search, 'audioDebug');
+  const isStageTwo = stageId === 'stage-002';
+  const isStageThree = stageId === 'stage-003';
 
   return (
     <main className="game-shell">
@@ -92,20 +199,10 @@ function StageSession({ stage, muted, onMutedChange, onSwitchStage }: {
         <div className="game-overlay">
           <div className="mission-slot"><MissionCard stage={stage} /></div>
           <StatusMessage status={gameState.status} stageId={stage.id} />
-          <div className="controls-slot"><GameControls onReset={() => bridge.reset()} muted={muted} onToggleMuted={toggleMuted} /></div>
+          <div className="controls-slot">
+            <GameControls onReset={() => bridge.reset()} muted={muted} onToggleMuted={onToggleMuted} onHome={onHome} onStageSelect={onStageSelect} />
+          </div>
           <div className="stability-slot"><StabilityStatus goal={gameState.goal} visible={goalVisible} subject={isStageThree ? '케이크' : isStageTwo ? '서류' : '물병'} /></div>
-          {gameState.progressState === 'completed' && (
-            <SuccessPanel
-              onReplay={() => bridge.reset()}
-              title={isStageThree ? 'Demo Complete' : isStageTwo ? '미션 완료!' : '미션 완료!'}
-              message={isStageThree ? '생일 케이크 준비가 끝났습니다!' : isStageTwo ? '서류가 안전하게 놓였습니다!' : '물병이 안전하게 유지되고 있어요.'}
-              replayLabel={isStageThree || isStageTwo ? 'Restart Stage' : '다시 플레이'}
-              secondaryAction={isStageThree
-                ? { label: 'Back to Stage 2', onClick: () => onSwitchStage('stage-002') }
-                : isStageTwo ? { label: 'Next Stage', onClick: () => onSwitchStage('stage-003') }
-                  : { label: 'Next Stage', onClick: () => onSwitchStage('stage-002') }}
-            />
-          )}
           {qa && <AudioQaPanel bridge={bridge} />}
         </div>
       </section>
