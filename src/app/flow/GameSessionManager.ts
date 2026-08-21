@@ -1,31 +1,36 @@
 import type { ShellStageId } from './AppFlow';
+import type { GameRuntimeLoader, ManagedGameSession, PreparedStageAudio, RuntimeBridge, StageAudioPreparer } from './GameRuntimeContract';
 
-export interface SessionBridge {
-  setMuted(muted: boolean): void;
-  unlockAudio(): Promise<boolean>;
-  stopAudioLoops(): void;
-  destroy(): void;
-}
-
-export interface ManagedGameSession<TBridge extends SessionBridge = SessionBridge> {
+interface PendingSession<TBridge extends RuntimeBridge> {
+  readonly generation: number;
   readonly stageId: ShellStageId;
-  readonly bridge: TBridge;
+  readonly audio: PreparedStageAudio;
+  readonly promise: Promise<ManagedGameSession<TBridge> | null>;
 }
 
-export type GameBridgeFactory<TBridge extends SessionBridge = SessionBridge> = (stageId: ShellStageId, muted: boolean) => TBridge;
-
-export class GameSessionManager<TBridge extends SessionBridge = SessionBridge> {
+export class GameSessionManager<TBridge extends RuntimeBridge = RuntimeBridge> {
   private current: ManagedGameSession<TBridge> | null = null;
+  private pending: PendingSession<TBridge> | null = null;
+  private generation = 0;
 
-  public constructor(private readonly createBridge: GameBridgeFactory<TBridge>) {}
+  public constructor(
+    private readonly loadRuntime: GameRuntimeLoader<TBridge>,
+    private readonly prepareAudio: StageAudioPreparer,
+  ) {}
 
-  public start(stageId: ShellStageId, muted: boolean, unlockFromGesture: boolean): ManagedGameSession<TBridge> {
+  public start(stageId: ShellStageId, muted: boolean, unlockFromGesture: boolean): Promise<ManagedGameSession<TBridge> | null> {
+    if (this.pending?.stageId === stageId) return this.pending.promise;
     this.destroy();
-    const bridge = this.createBridge(stageId, muted);
-    bridge.setMuted(muted);
-    if (unlockFromGesture) void bridge.unlockAudio().catch(() => false);
-    this.current = { stageId, bridge };
-    return this.current;
+
+    const generation = ++this.generation;
+    const audio = this.prepareAudio(muted, unlockFromGesture);
+    const promise = this.createSession(generation, stageId, muted, audio);
+    this.pending = { generation, stageId, audio, promise };
+    promise.then(
+      () => { if (this.pending?.generation === generation) this.pending = null; },
+      () => { if (this.pending?.generation === generation) this.pending = null; },
+    );
+    return promise;
   }
 
   public getCurrent(): ManagedGameSession<TBridge> | null {
@@ -33,13 +38,49 @@ export class GameSessionManager<TBridge extends SessionBridge = SessionBridge> {
   }
 
   public setMuted(muted: boolean): void {
+    this.pending?.audio.setMuted(muted);
     this.current?.bridge.setMuted(muted);
   }
 
-  public destroy(session: ManagedGameSession<TBridge> | null = this.current): void {
-    if (!session || this.current !== session) return;
-    session.bridge.stopAudioLoops();
-    session.bridge.destroy();
+  public destroy(session?: ManagedGameSession<TBridge>): void {
+    if (session) {
+      if (this.current !== session) return;
+      this.current = null;
+      session.destroy();
+      return;
+    }
+
+    this.generation += 1;
+    this.pending?.audio.destroy();
+    this.pending = null;
+    const current = this.current;
     this.current = null;
+    current?.destroy();
+  }
+
+  private async createSession(
+    generation: number,
+    stageId: ShellStageId,
+    muted: boolean,
+    audio: PreparedStageAudio,
+  ): Promise<ManagedGameSession<TBridge> | null> {
+    try {
+      const runtime = await this.loadRuntime();
+      if (generation !== this.generation) {
+        audio.destroy();
+        return null;
+      }
+      const session = await runtime.createSession(stageId, muted, audio);
+      if (generation !== this.generation) {
+        session.destroy();
+        return null;
+      }
+      this.current?.destroy();
+      this.current = session;
+      return session;
+    } catch (error) {
+      audio.destroy();
+      throw error;
+    }
   }
 }

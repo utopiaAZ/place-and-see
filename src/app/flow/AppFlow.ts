@@ -6,6 +6,8 @@ export type AppScreen =
   | 'home'
   | 'stage-select'
   | 'stage-intro'
+  | 'stage-loading'
+  | 'stage-load-error'
   | 'playing'
   | 'stage-complete'
   | 'demo-complete'

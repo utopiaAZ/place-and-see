@@ -28,6 +28,7 @@
 - `?stage=002`, `?stage=003`, `?stage=003&audioDebug=1`, `?stage=003&debugZones=1` 개발용 진입
 - Home, Stage Select, Stage Intro, Stage Complete, Demo Complete와 Credits로 이어지는 React 게임 셸
 - 완료 Stage·마지막 선택 Stage·mute를 저장하는 `place-and-see:progress:v1` 진행 상태
+- Start Stage 이후에만 Phaser/runtime을 내려받는 지연 로딩과 접근 가능한 loading/error/retry 화면
 
 ## Stage 1
 
@@ -85,9 +86,10 @@
 
 셸 화면은 키보드로 조작할 수 있지만, 퍼즐 drag의 키보드 대체 조작과 모바일 세로 모드는 아직 지원하지 않습니다.
 
-셸의 Play는 가장 이른 미완료 Stage의 Intro로 이동합니다. 각 Intro에서 `Start Stage`를 누른 뒤에만
-Core·GameBridge·Phaser session과 canvas가 만들어집니다. 전체 화면 흐름, 저장 schema와 reset 정책은
-[게임 셸 문서](docs/GAME_SHELL.md)를 참고하세요.
+셸의 Play는 가장 이른 미완료 Stage의 Intro로 이동합니다. 각 Intro에서 `Start Stage`를 누르면 같은 사용자
+입력 안에서 오디오 unlock을 시작한 뒤 game runtime을 동적으로 불러오며, 준비가 끝난 뒤에만
+Core·GameBridge·Phaser session과 canvas가 만들어집니다. 전체 화면 흐름과 저장 정책은
+[게임 셸 문서](docs/GAME_SHELL.md), bundle 측정과 지연 로딩 경계는 [성능 문서](docs/PERFORMANCE.md)를 참고하세요.
 
 ## 기술 스택
 
@@ -153,13 +155,14 @@ npm run validate:assets
 npm run validate:audio
 ```
 
-현재 자동 테스트 190개가 통과합니다. App flow, progress storage, query와 session lifecycle 테스트를 포함하며 Stage 3는 Core/Phaser/Audio 자동 테스트와 SVG·MP3 원본/런타임 hash 검증을 유지합니다. Stage validator는 3개 Stage, asset validator는 Stage 2·3 SVG 원본/런타임 쌍, audio validator는 Stage 1 MP3 11개·Stage 2 MP3 3개·Stage 3 MP3 4개를 검증합니다. Stage 3 신규 MP3 4개의 marker, volume과 게임 내 재생은 프로젝트 소유자의 직접 청취 검수를 통과했습니다. 기존 Stage 1·2 MP3와 marker는 변경하지 않았습니다.
+현재 자동 테스트 208개가 통과합니다. App flow, progress storage, query, lazy runtime과 session lifecycle 테스트를 포함하며 Stage 3는 Core/Phaser/Audio 자동 테스트와 SVG·MP3 원본/런타임 hash 검증을 유지합니다. Stage validator는 3개 Stage, asset validator는 Stage 2·3 SVG 원본/런타임 쌍, audio validator는 Stage 1 MP3 11개·Stage 2 MP3 3개·Stage 3 MP3 4개를 검증합니다. Stage 3 신규 MP3 4개의 marker, volume과 게임 내 재생은 프로젝트 소유자의 직접 청취 검수를 통과했습니다. 기존 Stage 1·2 MP3와 marker는 변경하지 않았습니다.
 
 Stage 2의 `fan-loop-01.mp3`, `paper-flutter-01.mp3`, `paper-fall-01.mp3`는 파형 분석 기반 marker로
 연결되었으며, 프로젝트 소유자의 직접 플레이 청취 검수를 통과했습니다. 자세한 값은
 [Stage 2 오디오 문서](docs/audio/STAGE_002_AUDIO.md)에 기록되어 있습니다.
 
-Phaser를 포함한 단일 프로덕션 번들이 500kB를 넘는 Vite 경고는 현재 알려진 비차단 항목입니다.
+초기 entry에서는 Phaser가 제거됐으며 Phaser를 포함한 lazy runtime chunk의 500kB 초과 Vite 경고만
+남아 있습니다. 경고 제한값은 높이지 않았고 세부 수치는 [성능 문서](docs/PERFORMANCE.md)에 기록했습니다.
 
 ## 프로젝트 구조
 
@@ -170,6 +173,7 @@ src/
 ├── bridge/       # React–Phaser–Core 통신
 ├── content/      # Stage 데이터와 schema
 ├── core/         # 엔진, 규칙, 상태, Command와 Event
+├── game-runtime/ # 지연 로드되는 Bridge/Core/Audio/Phaser session 조립
 ├── phaser/       # Scene, View, Rig, layout과 Asset loading
 └── ui/           # React UI 컴포넌트
 
@@ -223,4 +227,4 @@ bounds와 전용 `LIGHT_CANDLE` Command로 수정했습니다. 사운드 선택�
 1. 사람 플레이테스트로 조작 이해도와 퍼즐 해답의 발견 가능성 검증
 2. hit area와 고양이·물병의 코미디 타이밍 보정
 3. Stage 4는 아직 구현되지 않았으며, 후속 범위에서 별도로 설계
-4. 필요할 경우 Phaser 번들 분할과 초기 로딩 개선
+4. 추가 최적화가 필요하면 Stage별 Scene/Asset preload 분리와 Phaser lazy chunk 내부 분석 검토

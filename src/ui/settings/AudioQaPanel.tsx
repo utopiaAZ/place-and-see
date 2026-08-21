@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import type { GameBridge } from '../../bridge/GameBridge';
+import type { RuntimeBridge } from '../../app/flow/GameRuntimeContract';
 import type { AudioDebugState } from '../../audio/AudioManager';
 
 interface AudioQaPanelProps {
-  readonly bridge: GameBridge;
+  readonly bridge: RuntimeBridge;
 }
 
 export function AudioQaPanel({ bridge }: AudioQaPanelProps) {

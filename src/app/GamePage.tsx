@@ -1,11 +1,5 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
-import { AudioManager } from '../audio/AudioManager';
-import { audioManifestForStage } from '../audio/gameAudioManifest';
-import { DEFAULT_AUDIO_SETTINGS } from '../audio/soundCategories';
-import { WebAudioPlaybackBackend } from '../audio/WebAudioPlaybackBackend';
-import { GameBridge } from '../bridge/GameBridge';
 import type { GameEvent } from '../core/events/GameEvent';
-import { PhaserGame } from '../phaser/PhaserGame';
 import { useGameState } from '../store/useGameState';
 import { GameControls } from '../ui/controls/GameControls';
 import { MissionCard } from '../ui/mission/MissionCard';
@@ -13,9 +7,11 @@ import { StabilityStatus } from '../ui/result/StabilityStatus';
 import { StatusMessage } from '../ui/result/StatusMessage';
 import { AudioQaPanel } from '../ui/settings/AudioQaPanel';
 import { createInitialFlowState, appFlowReducer, type AppFlowAction } from './flow/appFlowReducer';
-import { GameSessionManager, type ManagedGameSession } from './flow/GameSessionManager';
+import { GameSessionManager } from './flow/GameSessionManager';
+import type { GameRuntimeLoader, ManagedGameSession, StageAudioPreparer } from './flow/GameRuntimeContract';
+import { GameRuntimeImportError, loadGameRuntime } from './flow/loadGameRuntime';
+import { prepareStageAudio } from './flow/stageAudioPreparation';
 import type { ShellStageId } from './flow/AppFlow';
-import { getStageDefinition } from './flow/stageCatalog';
 import { hasDebugQuery, parseStageQuery } from './flow/stageQuery';
 import { readGameProgress, writeGameProgress } from './storage/gameProgressStorage';
 import { CreditsScreen } from './screens/CreditsScreen';
@@ -23,6 +19,8 @@ import { DemoCompleteScreen } from './screens/DemoCompleteScreen';
 import { HomeScreen } from './screens/HomeScreen';
 import { StageCompleteScreen } from './screens/StageCompleteScreen';
 import { StageIntroScreen } from './screens/StageIntroScreen';
+import { StageLoadErrorScreen } from './screens/StageLoadErrorScreen';
+import { StageLoadingScreen } from './screens/StageLoadingScreen';
 import { StageSelectScreen } from './screens/StageSelectScreen';
 
 interface InitialAppState {
@@ -30,7 +28,10 @@ interface InitialAppState {
   readonly directStageId: ShellStageId | null;
 }
 
-export function GamePage() {
+export function GamePage({ runtimeLoader = loadGameRuntime, audioPreparer = prepareStageAudio }: {
+  readonly runtimeLoader?: GameRuntimeLoader;
+  readonly audioPreparer?: StageAudioPreparer;
+} = {}) {
   const [initial] = useState<InitialAppState>(() => {
     const progress = readGameProgress();
     const query = parseStageQuery(window.location.search);
@@ -41,12 +42,11 @@ export function GamePage() {
     createInitialFlowState(initial.progress.completedStageIds, initial.progress.lastPlayedStageId, initial.directStageId),
   );
   const [muted, setMuted] = useState(initial.progress.muted);
-  const [sessionManager] = useState(() => new GameSessionManager<GameBridge>((stageId, isMuted) => {
-    const stage = getStageDefinition(stageId);
-    const settings = { ...DEFAULT_AUDIO_SETTINGS, muted: isMuted };
-    return new GameBridge(stage, new AudioManager(audioManifestForStage(stage.id), new WebAudioPlaybackBackend(), settings));
-  }));
-  const [session, setSession] = useState<ManagedGameSession<GameBridge> | null>(null);
+  const [sessionManager] = useState(() => new GameSessionManager(runtimeLoader, audioPreparer));
+  const [session, setSession] = useState<ManagedGameSession | null>(null);
+  const pendingLaunch = useRef<Promise<ManagedGameSession | null> | null>(null);
+  const lastLoadError = useRef<unknown>(null);
+  const directLaunchStarted = useRef(false);
   const lifecycle = useRef({ generation: 0 });
 
   useEffect(() => {
@@ -59,12 +59,6 @@ export function GamePage() {
   }, [flow.completedStageIds, flow.lastPlayedStageId, muted]);
 
   useEffect(() => {
-    if (flow.screen !== 'playing' || !flow.selectedStageId || session) return;
-    const active = sessionManager.getCurrent() ?? sessionManager.start(flow.selectedStageId, muted, false);
-    setSession(active);
-  }, [flow.screen, flow.selectedStageId, muted, session, sessionManager]);
-
-  useEffect(() => {
     const lifecycleState = lifecycle.current;
     const generation = ++lifecycleState.generation;
     return () => queueMicrotask(() => {
@@ -72,9 +66,52 @@ export function GamePage() {
     });
   }, [sessionManager]);
 
+  const beginStageLoad = useCallback((stageId: ShellStageId, unlockFromGesture: boolean): boolean => {
+    if (pendingLaunch.current) return false;
+    let request: Promise<ManagedGameSession | null>;
+    try {
+      request = sessionManager.start(stageId, muted, unlockFromGesture);
+    } catch (error) {
+      lastLoadError.current = error;
+      if (import.meta.env.DEV) console.error('[Place & See] Stage runtime preparation failed.', error);
+      dispatch({ type: 'STAGE_LOAD_FAILED', stageId });
+      return false;
+    }
+    pendingLaunch.current = request;
+    void request.then(
+      (active) => {
+        if (pendingLaunch.current !== request || !active) return;
+        pendingLaunch.current = null;
+        lastLoadError.current = null;
+        setSession(active);
+        dispatch({ type: 'STAGE_LOAD_SUCCEEDED', stageId });
+      },
+      (error: unknown) => {
+        if (pendingLaunch.current !== request) return;
+        pendingLaunch.current = null;
+        lastLoadError.current = error;
+        setSession(null);
+        if (import.meta.env.DEV) console.error('[Place & See] Stage runtime failed to load.', error);
+        dispatch({ type: 'STAGE_LOAD_FAILED', stageId });
+      },
+    );
+    return true;
+  }, [muted, sessionManager]);
+
+  useEffect(() => {
+    if (!initial.directStageId || directLaunchStarted.current || flow.screen !== 'stage-loading') return;
+    directLaunchStarted.current = true;
+    beginStageLoad(initial.directStageId, false);
+  }, [beginStageLoad, flow.screen, initial.directStageId]);
+
   const releaseSession = useCallback(() => {
     const active = sessionManager.getCurrent();
-    if (!active) return;
+    pendingLaunch.current = null;
+    if (!active) {
+      sessionManager.destroy();
+      setSession(null);
+      return;
+    }
     active.bridge.stopAudioLoops();
     setSession(null);
     queueMicrotask(() => sessionManager.destroy(active));
@@ -85,11 +122,35 @@ export function GamePage() {
     dispatch(action);
   }, [releaseSession]);
 
+  const handleRuntimeError = useCallback((error: unknown) => {
+    const stageId = sessionManager.getCurrent()?.stageId;
+    if (!stageId) return;
+    if (import.meta.env.DEV) console.error('[Place & See] Stage runtime mount failed.', error);
+    releaseSession();
+    dispatch({ type: 'STAGE_LOAD_FAILED', stageId });
+  }, [releaseSession, sessionManager]);
+
   const startStage = () => {
     if (!flow.selectedStageId) return;
-    const active = sessionManager.start(flow.selectedStageId, muted, true);
-    setSession(active);
-    dispatch({ type: 'START_STAGE' });
+    if (beginStageLoad(flow.selectedStageId, true)) dispatch({ type: 'START_STAGE' });
+  };
+
+  const retryStage = () => {
+    if (!flow.selectedStageId) return;
+    if (lastLoadError.current instanceof GameRuntimeImportError) {
+      const retryUrl = new URL(window.location.href);
+      retryUrl.searchParams.set('stage', flow.selectedStageId.slice(-3));
+      window.location.assign(retryUrl);
+      return;
+    }
+    if (beginStageLoad(flow.selectedStageId, true)) dispatch({ type: 'RETRY_STAGE' });
+  };
+
+  const cancelLoadAndDispatch = (action: AppFlowAction) => {
+    pendingLaunch.current = null;
+    sessionManager.destroy();
+    setSession(null);
+    dispatch(action);
   };
 
   const toggleMuted = () => {
@@ -118,6 +179,12 @@ export function GamePage() {
   if (flow.screen === 'stage-intro' && selectedStageId) {
     return <StageIntroScreen stageId={selectedStageId} muted={muted} onToggleMuted={toggleMuted} onStart={startStage} onBack={() => dispatch({ type: 'SHOW_STAGE_SELECT' })} />;
   }
+  if (flow.screen === 'stage-loading' && selectedStageId) {
+    return <StageLoadingScreen stageId={selectedStageId} muted={muted} onToggleMuted={toggleMuted} onStageSelect={() => cancelLoadAndDispatch({ type: 'SHOW_STAGE_SELECT' })} onHome={() => cancelLoadAndDispatch({ type: 'GO_HOME' })} />;
+  }
+  if (flow.screen === 'stage-load-error' && selectedStageId) {
+    return <StageLoadErrorScreen stageId={selectedStageId} muted={muted} onToggleMuted={toggleMuted} onRetry={retryStage} onStageSelect={() => cancelLoadAndDispatch({ type: 'SHOW_STAGE_SELECT' })} onHome={() => cancelLoadAndDispatch({ type: 'GO_HOME' })} />;
+  }
   if (flow.screen === 'stage-complete' && selectedStageId) {
     return <StageCompleteScreen stageId={selectedStageId} muted={muted} onToggleMuted={toggleMuted} onNext={() => dispatch({ type: 'NEXT_STAGE' })} onReplay={() => dispatch({ type: 'REPLAY_STAGE' })} onStageSelect={() => dispatch({ type: 'SHOW_STAGE_SELECT' })} />;
   }
@@ -128,28 +195,31 @@ export function GamePage() {
     return (
       <StageSession
         key={`${session.stageId}-${session.bridge.getStage().id}`}
-        bridge={session.bridge}
+        session={session}
         stageId={selectedStageId}
         muted={muted}
         onToggleMuted={toggleMuted}
         onComplete={(stageId) => leavePlaying({ type: 'COMPLETE_STAGE', stageId })}
         onHome={() => leavePlaying({ type: 'GO_HOME' })}
         onStageSelect={() => leavePlaying({ type: 'SHOW_STAGE_SELECT' })}
+        onRuntimeError={handleRuntimeError}
       />
     );
   }
   return null;
 }
 
-function StageSession({ bridge, stageId, muted, onToggleMuted, onComplete, onHome, onStageSelect }: {
-  readonly bridge: GameBridge;
+function StageSession({ session, stageId, muted, onToggleMuted, onComplete, onHome, onStageSelect, onRuntimeError }: {
+  readonly session: ManagedGameSession;
   readonly stageId: ShellStageId;
   readonly muted: boolean;
   readonly onToggleMuted: () => void;
   readonly onComplete: (stageId: ShellStageId) => void;
   readonly onHome: () => void;
   readonly onStageSelect: () => void;
+  readonly onRuntimeError: (error: unknown) => void;
 }) {
+  const bridge = session.bridge;
   const stage = bridge.getStage();
   const gameState = useGameState(bridge);
   const canvasHost = useRef<HTMLDivElement>(null);
@@ -158,20 +228,25 @@ function StageSession({ bridge, stageId, muted, onToggleMuted, onComplete, onHom
   useEffect(() => {
     const host = canvasHost.current;
     if (!host) return;
-    const game = new PhaserGame();
-    game.mount(host, bridge);
-    return () => game.destroy();
-  }, [bridge]);
+    try {
+      return session.mount(host);
+    } catch (error) {
+      onRuntimeError(error);
+      return undefined;
+    }
+  }, [onRuntimeError, session]);
 
   useEffect(() => {
     let disposed = false;
     const remove = () => {
       window.removeEventListener('pointerdown', unlock);
+      window.removeEventListener('click', unlock, true);
       window.removeEventListener('keydown', unlock);
       window.removeEventListener('touchstart', unlock);
     };
     const unlock = () => { void bridge.unlockAudio().then((ok) => { if (ok && !disposed) remove(); }).catch(() => undefined); };
     window.addEventListener('pointerdown', unlock, { passive: true });
+    window.addEventListener('click', unlock, { capture: true });
     window.addEventListener('keydown', unlock);
     window.addEventListener('touchstart', unlock, { passive: true });
     return () => { disposed = true; remove(); };

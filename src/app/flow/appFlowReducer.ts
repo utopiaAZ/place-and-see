@@ -7,6 +7,9 @@ export type AppFlowAction =
   | { readonly type: 'GO_HOME' }
   | { readonly type: 'SELECT_STAGE'; readonly stageId: ShellStageId }
   | { readonly type: 'START_STAGE' }
+  | { readonly type: 'STAGE_LOAD_SUCCEEDED'; readonly stageId: ShellStageId }
+  | { readonly type: 'STAGE_LOAD_FAILED'; readonly stageId: ShellStageId }
+  | { readonly type: 'RETRY_STAGE' }
   | { readonly type: 'COMPLETE_STAGE'; readonly stageId: ShellStageId }
   | { readonly type: 'NEXT_STAGE' }
   | { readonly type: 'REPLAY_STAGE' }
@@ -18,7 +21,7 @@ export function createInitialFlowState(
   directStageId: ShellStageId | null = null,
 ): AppFlowState {
   return {
-    screen: directStageId ? 'playing' : 'home',
+    screen: directStageId ? 'stage-loading' : 'home',
     selectedStageId: directStageId,
     completedStageIds: [...completedStageIds],
     lastPlayedStageId: directStageId ?? lastPlayedStageId,
@@ -40,7 +43,19 @@ export function appFlowReducer(state: AppFlowState, action: AppFlowAction): AppF
     case 'SELECT_STAGE':
       return { ...state, screen: 'stage-intro', selectedStageId: action.stageId, lastPlayedStageId: action.stageId };
     case 'START_STAGE':
-      return state.selectedStageId ? { ...state, screen: 'playing' } : state;
+      return state.screen === 'stage-intro' && state.selectedStageId ? { ...state, screen: 'stage-loading' } : state;
+    case 'STAGE_LOAD_SUCCEEDED':
+      return state.screen === 'stage-loading' && state.selectedStageId === action.stageId
+        ? { ...state, screen: 'playing' }
+        : state;
+    case 'STAGE_LOAD_FAILED':
+      return (state.screen === 'stage-loading' || state.screen === 'playing') && state.selectedStageId === action.stageId
+        ? { ...state, screen: 'stage-load-error' }
+        : state;
+    case 'RETRY_STAGE':
+      return state.screen === 'stage-load-error' && state.selectedStageId
+        ? { ...state, screen: 'stage-loading' }
+        : state;
     case 'COMPLETE_STAGE': {
       if (state.screen !== 'playing' || state.selectedStageId !== action.stageId) return state;
       const completedStageIds = state.completedStageIds.includes(action.stageId)

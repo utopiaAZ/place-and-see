@@ -2,14 +2,19 @@ import { describe, expect, it } from 'vitest';
 import { firstIncompleteStage, nextStageId } from '../../src/app/flow/AppFlow';
 import { appFlowReducer, createInitialFlowState } from '../../src/app/flow/appFlowReducer';
 
+const playingState = (stageId: 'stage-001' | 'stage-002' | 'stage-003') => appFlowReducer(
+  createInitialFlowState([], null, stageId),
+  { type: 'STAGE_LOAD_SUCCEEDED', stageId },
+);
+
 describe('appFlowReducer', () => {
   it('starts on Home without a direct query', () => {
     expect(createInitialFlowState().screen).toBe('home');
   });
 
-  it('starts a valid direct stage in playing', () => {
+  it('starts a valid direct stage in loading without creating play state early', () => {
     const state = createInitialFlowState([], null, 'stage-002');
-    expect(state).toMatchObject({ screen: 'playing', selectedStageId: 'stage-002', lastPlayedStageId: 'stage-002' });
+    expect(state).toMatchObject({ screen: 'stage-loading', selectedStageId: 'stage-002', lastPlayedStageId: 'stage-002' });
   });
 
   it('Play selects the earliest incomplete stage', () => {
@@ -34,33 +39,50 @@ describe('appFlowReducer', () => {
 
   it('starts only after the intro action', () => {
     const intro = appFlowReducer(createInitialFlowState(), { type: 'SELECT_STAGE', stageId: 'stage-001' });
-    expect(appFlowReducer(intro, { type: 'START_STAGE' }).screen).toBe('playing');
+    const loading = appFlowReducer(intro, { type: 'START_STAGE' });
+    expect(loading.screen).toBe('stage-loading');
+    expect(appFlowReducer(loading, { type: 'STAGE_LOAD_SUCCEEDED', stageId: 'stage-001' }).screen).toBe('playing');
+  });
+
+  it('moves a failed load to an error screen and retries the same Stage', () => {
+    const intro = appFlowReducer(createInitialFlowState(), { type: 'SELECT_STAGE', stageId: 'stage-003' });
+    const loading = appFlowReducer(intro, { type: 'START_STAGE' });
+    const failed = appFlowReducer(loading, { type: 'STAGE_LOAD_FAILED', stageId: 'stage-003' });
+    expect(failed).toMatchObject({ screen: 'stage-load-error', selectedStageId: 'stage-003' });
+    expect(appFlowReducer(failed, { type: 'RETRY_STAGE' })).toMatchObject({ screen: 'stage-loading', selectedStageId: 'stage-003' });
+  });
+
+  it('ignores stale load completion for a different Stage or screen', () => {
+    const home = createInitialFlowState();
+    expect(appFlowReducer(home, { type: 'STAGE_LOAD_SUCCEEDED', stageId: 'stage-001' })).toBe(home);
+    const loading = createInitialFlowState([], null, 'stage-002');
+    expect(appFlowReducer(loading, { type: 'STAGE_LOAD_SUCCEEDED', stageId: 'stage-003' })).toBe(loading);
   });
 
   it('records a completed Stage once', () => {
-    const playing = createInitialFlowState([], null, 'stage-001');
+    const playing = playingState('stage-001');
     const completed = appFlowReducer(playing, { type: 'COMPLETE_STAGE', stageId: 'stage-001' });
     expect(completed.completedStageIds).toEqual(['stage-001']);
     expect(appFlowReducer(completed, { type: 'COMPLETE_STAGE', stageId: 'stage-001' })).toBe(completed);
   });
 
   it('moves Stage 1 completion to Stage 2 intro', () => {
-    const complete = appFlowReducer(createInitialFlowState([], null, 'stage-001'), { type: 'COMPLETE_STAGE', stageId: 'stage-001' });
+    const complete = appFlowReducer(playingState('stage-001'), { type: 'COMPLETE_STAGE', stageId: 'stage-001' });
     expect(appFlowReducer(complete, { type: 'NEXT_STAGE' })).toMatchObject({ screen: 'stage-intro', selectedStageId: 'stage-002' });
   });
 
   it('moves Stage 2 completion to Stage 3 intro', () => {
-    const complete = appFlowReducer(createInitialFlowState([], null, 'stage-002'), { type: 'COMPLETE_STAGE', stageId: 'stage-002' });
+    const complete = appFlowReducer(playingState('stage-002'), { type: 'COMPLETE_STAGE', stageId: 'stage-002' });
     expect(appFlowReducer(complete, { type: 'NEXT_STAGE' })).toMatchObject({ screen: 'stage-intro', selectedStageId: 'stage-003' });
   });
 
   it('moves Stage 3 completion to Demo Complete', () => {
-    const complete = appFlowReducer(createInitialFlowState([], null, 'stage-003'), { type: 'COMPLETE_STAGE', stageId: 'stage-003' });
+    const complete = appFlowReducer(playingState('stage-003'), { type: 'COMPLETE_STAGE', stageId: 'stage-003' });
     expect(complete.screen).toBe('demo-complete');
   });
 
   it('replays the same stage through its intro', () => {
-    const complete = appFlowReducer(createInitialFlowState([], null, 'stage-002'), { type: 'COMPLETE_STAGE', stageId: 'stage-002' });
+    const complete = appFlowReducer(playingState('stage-002'), { type: 'COMPLETE_STAGE', stageId: 'stage-002' });
     expect(appFlowReducer(complete, { type: 'REPLAY_STAGE' })).toMatchObject({ screen: 'stage-intro', selectedStageId: 'stage-002' });
   });
 
