@@ -2,12 +2,43 @@
 
 ## 배포 대상
 
+- 상태: 배포 완료
 - GitHub 저장소: `utopiaAZ/place-and-see`
 - Pages 유형: Project Pages
-- 예상 URL: `https://utopiaAZ.github.io/place-and-see/`
+- Live URL: `https://utopiaaz.github.io/place-and-see/`
 - production base: `/place-and-see/`
+- 배포 기준 commit: `bb5475e2b8dfbbcef12bcb30735a2c5275cb473e`
+- commit message: `ci: add GitHub Pages deployment`
+- 최초 성공 Actions run: [#32444074224](https://github.com/utopiaAZ/place-and-see/actions/runs/32444074224)
 
-아직 workflow를 실제 실행하거나 Pages 설정을 변경하지 않았으므로 예상 URL을 공개된 Live Demo로 확정하지 않습니다. custom domain도 현재 범위 밖입니다.
+GitHub Actions의 build, test, validator, artifact upload와 deploy 단계가 모두 통과했으며 위 URL을 실제
+GitHub Pages 배포본으로 확인했습니다. custom domain은 현재 범위 밖입니다.
+
+## 최초 배포와 최종 QA
+
+### 자동 검증
+
+- GitHub Actions production build, TypeScript와 ESLint 통과
+- 22개 테스트 파일의 220개 자동 테스트 통과
+- Stage 3개, Stage 2·3 SVG 13쌍, Audio Stage별 11/3/4개 validator 통과
+- Pages artifact upload와 `github-pages` deploy 성공
+
+### 배포 smoke test
+
+- Home, CSS와 favicon 응답 및 화면 표시 정상
+- Home, Stage Select와 Stage Intro에서 canvas 0개, Stage 시작 후 Phaser lazy runtime과 canvas 1개 확인
+- Stage query 직접 진입과 대표 SVG, `cat-rig.json`, MP3 요청 정상
+- root `/assets/...` 또는 중복 `/place-and-see/place-and-see/...` 요청 없음
+- 처리되지 않은 오류나 실패 화면 없음
+
+GitHub Pages는 MP3를 `audio/mp3`로 제공했습니다. Web Audio loader의 `audio/*` 검사를 통과했고 실제
+재생도 정상이므로 수정이 필요하지 않습니다.
+
+### 사용자 직접 검수
+
+프로젝트 소유자가 배포본에서 Stage 1→Stage 2→Stage 3 전체 플레이를 완료해 각 Stage의 해결 흐름과
+전환을 확인했습니다. 효과음과 반복 사운드를 직접 청취했으며, 사운드 품질·상대적 연출과 최종 플레이
+경험에 차단 문제가 없음을 확인하고 배포본을 승인했습니다.
 
 ## Vite base와 runtime asset URL
 
@@ -55,7 +86,7 @@ npm run build
 Remove-Item Env:VITE_BASE_PATH
 ```
 
-## 최초 1회 GitHub 설정
+## 최초 배포 시 완료한 GitHub 설정
 
 1. Repository **Settings**를 엽니다.
 2. **Pages**로 이동합니다.
@@ -63,9 +94,10 @@ Remove-Item Env:VITE_BASE_PATH
 4. `main` push 또는 Actions의 **Deploy GitHub Pages**에서 `workflow_dispatch`를 실행합니다.
 5. build와 deploy job이 모두 성공했는지 확인하고 deployment URL을 엽니다.
 
-이 설정은 저장소 소유자가 직접 수행해야 하며 이번 변경에서는 실행하지 않습니다. 별도 secret은 필요하지 않습니다.
+저장소 소유자가 Pages Source를 **GitHub Actions**로 설정해 최초 배포를 완료했습니다. 이후에도 별도
+secret이나 `gh-pages` branch 없이 같은 workflow로 재배포합니다.
 
-## 실제 배포 후 체크리스트
+## 향후 재배포 체크리스트
 
 - Home, Stage Select, Credits와 Stage Intro에서 canvas가 0개인지 확인
 - Start Stage 뒤 `GameRuntime` lazy chunk와 canvas 하나가 생성되는지 확인

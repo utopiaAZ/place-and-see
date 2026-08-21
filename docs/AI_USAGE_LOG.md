@@ -107,15 +107,15 @@ AI로 만든 코드, 그래픽, 오디오 또는 문서가 최종 프로젝트�
 - 검토자: 프로젝트 소유자 확인 필요
 - 비고: 20개 테스트 파일의 208개 자동 테스트와 Stage·SVG·Audio validator가 통과했다. Stage 1·2·3 규칙과 SVG/MP3, audio marker/volume은 변경하지 않음
 
-## 2026-08-21 — GitHub Pages 배포 준비
+## 2026-08-21 — GitHub Pages 배포와 최종 검수
 
 - 날짜: 2026-08-21
 - 사용 도구 및 모델: Codex
-- 작업 목적: Project Pages 하위 경로에서 entry, lazy runtime과 모든 public asset을 안전하게 제공하고 공식 Actions 배포 절차 준비
-- 입력 또는 프롬프트 요약: origin 기반 owner/repository 확인, Vite base, 공통 asset URL helper, validator 강화, 공식 Pages Actions, query 직접 진입과 local subpath 검증
-- 생성 결과: `/place-and-see/` production base, SVG/MP3/JSON URL 결합 계층, Pages workflow, URL·workflow 테스트와 배포 문서
-- 사람이 검토·수정할 내용: 저장소 Settings에서 Pages Source를 GitHub Actions로 선택하고 첫 workflow와 실제 배포 URL, asset 200/MIME, 전체 플레이 흐름을 확인
-- 최종 사용 파일: `vite.config.ts`, `src/assets/publicAssetUrl.ts`, Stage Asset/Audio Manifest, validator, `.github/workflows/deploy-pages.yml`, 관련 Test/Docs
+- 작업 목적: Project Pages 하위 경로 대응과 공식 Actions 배포를 완료하고 실제 배포본의 기술·플레이·사운드 품질 검수 기록 확정
+- 입력 또는 프롬프트 요약: origin 기반 owner/repository 확인, Vite base, 공통 asset URL helper, validator 강화, 공식 Pages Actions, local subpath와 배포 후 HTTP/lazy chunk/query/asset smoke test
+- 생성 결과: Codex 지원으로 `/place-and-see/` production base, SVG/MP3/JSON URL 결합 계층, Pages workflow, URL·workflow 테스트와 배포 문서를 구성하고, 배포 후 HTTP·lazy runtime·query·asset 경로를 검증함
+- 사람이 검토·수정한 내용: 프로젝트 소유자가 Pages Source를 GitHub Actions로 직접 설정하고 인증 문제를 해결해 push와 배포를 진행했다. 실제 Live Demo에서 Stage 1→2→3 전체 해결 흐름과 전환을 완료하고 모든 효과음·반복 사운드를 직접 청취해 플레이와 사운드 품질에 문제가 없음을 판단하고 최종 승인
+- 최종 사용 파일: `vite.config.ts`, `src/assets/publicAssetUrl.ts`, Stage Asset/Audio Manifest, validator, `.github/workflows/deploy-pages.yml`, 관련 Test/Docs와 실제 GitHub Pages 배포본
 - 라이선스 또는 출처 확인: 신규 외부 패키지·그래픽·오디오 없음. GitHub 공식 Pages Actions와 문서를 기준으로 구성
-- 검토자: 프로젝트 소유자 확인 필요
-- 비고: Codex는 URL 조사·구현·자동 및 로컬 검증을 지원하며, 사용자가 실제 Pages 설정과 첫 배포를 승인·실행한다. commit, push와 GitHub Settings 변경은 수행하지 않음
+- 검토자: 프로젝트 소유자
+- 비고: Codex는 base path·public asset URL·Manifest/validator·Actions workflow 구현, 배포 전 local subpath 검증과 배포 후 smoke test·문서화를 지원했다. 최종 사운드 품질과 전체 게임 승인 판단은 프로젝트 소유자가 직접 수행했다. 배포 commit은 `bb5475e`, 최초 성공 Actions run은 `#32444074224`이며 22개 테스트 파일의 220개 자동 테스트와 모든 build/validator/deploy 단계가 통과함

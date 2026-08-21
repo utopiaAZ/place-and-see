@@ -9,6 +9,9 @@
 > 프로젝트 전체가 완성된 것은 아니며, 세 스테이지의 플레이 흐름과 확장 가능한 구조를 검증한
 > 세 Stage의 수직 샘플입니다.
 
+**[Live Demo](https://utopiaaz.github.io/place-and-see/)** — Stage 1부터 Stage 3까지 전체 플레이와
+사운드 청취 검수를 완료한 GitHub Pages 배포본입니다.
+
 ## 현재 구현 상태
 
 - 1600×900 가로형 Phaser 게임 화면과 React UI
@@ -144,11 +147,10 @@ npm run build
 npx vite preview
 ```
 
-기본 production build는 Project Pages 예상 경로인 `/place-and-see/`를 사용합니다. 로컬 preview는
+기본 production build는 Project Pages 경로인 `/place-and-see/`를 사용합니다. 로컬 preview는
 `node scripts/serve-subpath-preview.mjs --base /place-and-see/ --port 4176`으로 실행한 뒤
 `http://127.0.0.1:4176/place-and-see/`에서 확인합니다. GitHub Pages workflow와 최초 설정 절차는
-[배포 문서](docs/DEPLOYMENT.md)를 참고하세요. workflow와 Pages 설정은 아직 실제 실행되지 않았으므로 예상
-주소를 Live Demo로 표시하지 않습니다.
+[배포 문서](docs/DEPLOYMENT.md)를 참고하세요. 실제 배포본은 위의 Live Demo에서 확인할 수 있습니다.
 
 ## 검증
 
